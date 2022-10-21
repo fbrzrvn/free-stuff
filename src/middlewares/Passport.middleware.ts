@@ -1,10 +1,6 @@
 import { Request } from 'express';
 import passport from 'passport';
-import {
-  ExtractJwt,
-  Strategy as JwtStrategy,
-  StrategyOptions,
-} from 'passport-jwt';
+import { ExtractJwt, Strategy as JwtStrategy, StrategyOptions } from 'passport-jwt';
 
 // import { JwtTokenDto } from '../api/auth/dto';
 import { Env } from '../constants';
@@ -20,22 +16,18 @@ const cookieExtrator = (req: Request): string | null => {
 };
 
 const opts: StrategyOptions = {
-  jwtFromRequest: ExtractJwt.fromExtractors([
-    ExtractJwt.fromAuthHeaderAsBearerToken(),
-    cookieExtrator,
-  ]),
+  jwtFromRequest: ExtractJwt.fromExtractors([ExtractJwt.fromAuthHeaderAsBearerToken(), cookieExtrator]),
   ignoreExpiration: false,
-  secretOrKey: Env.JWT_SECRET,
+  secretOrKey: Env.JWT_SECRET
 };
 
-
 const JwtPassportMiddleware = new JwtStrategy(opts, async (tokenPayload: any, done) => {
-    try {
-      return done(null, tokenPayload);
-    } catch (error) {
-      return done(error, false);
-    }
-  })
+  try {
+    return done(null, tokenPayload);
+  } catch (error) {
+    return done(error, false);
+  }
+});
 
 passport.serializeUser(function (user, done) {
   done(null, user);

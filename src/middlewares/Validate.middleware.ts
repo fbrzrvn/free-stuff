@@ -24,7 +24,7 @@ class ValidateMiddleware {
       validate(obj, {
         skipMissingProperties,
         whitelist,
-        forbidNonWhitelisted,
+        forbidNonWhitelisted
       }).then((errors: ValidationError[]) => {
         if (errors.length > 0) {
           const message = errors.map(this._getAllNestedErrors).join(', ');

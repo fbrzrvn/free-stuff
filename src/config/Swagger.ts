@@ -14,11 +14,11 @@ class Swagger {
 
   init() {
     const schemas = validationMetadatasToSchemas({
-      refPointerPrefix: '#/components/schemas/',
+      refPointerPrefix: '#/components/schemas/'
     });
 
     const routingControllersOptions = {
-      controllers: this.app.getControllers,
+      controllers: this.app.getControllers
     };
 
     const storage = getMetadataArgsStorage();
@@ -30,20 +30,18 @@ class Swagger {
           bearerAuth: {
             type: 'http',
             scheme: 'bearer',
-            bearerFormat: 'JWT',
-          },
-        },
+            bearerFormat: 'JWT'
+          }
+        }
       },
       info: {
         description: 'API Generated with `routing-controllers-openapi` package',
         title: 'Free Stuff API',
-        version: '1.0.0',
-      },
+        version: '1.0.0'
+      }
     });
 
-    this.app
-      .getHTTPServer()
-      .use('/api/swagger', swaggerUi.serve, swaggerUi.setup(spec));
+    this.app.getHTTPServer().use('/api/swagger', swaggerUi.serve, swaggerUi.setup(spec));
   }
 }
 

@@ -8,7 +8,7 @@ try {
   process.exit(1);
 }
 
-process.on('uncaughtException', error => {
+process.on('uncaughtException', (error) => {
   Logger.error(`uncaughtException, ${error}`);
   process.exit(1);
 });

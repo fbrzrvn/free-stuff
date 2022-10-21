@@ -12,9 +12,9 @@ class Db {
     }
 
     if (Env.DB_USER && Env.DB_PASSWORD && Env.DB_NAME && Env.DB_HOST && Env.NODE === 'prod') {
-      Db.URI = `mongodb+srv://${Env.DB_USER}:${encodeURIComponent(
-        Env.DB_PASSWORD
-      )}@${Env.DB_HOST}/${Env.DB_NAME}?retryWrites=true&w=majority`;
+      Db.URI = `mongodb+srv://${Env.DB_USER}:${encodeURIComponent(Env.DB_PASSWORD)}@${Env.DB_HOST}/${
+        Env.DB_NAME
+      }?retryWrites=true&w=majority`;
     }
 
     mongoose.connect(this.URI);
@@ -25,7 +25,7 @@ class Db {
     });
 
     // If the connection throws an error
-    mongoose.connection.on('error', error => {
+    mongoose.connection.on('error', (error) => {
       Logger.error(error);
     });
 
@@ -37,9 +37,7 @@ class Db {
     // If the Node process ends, close the Mongoose connection (ctrl + c)
     process.on('SIGINT', () => {
       mongoose.connection.close(() => {
-        Logger.warn(
-          'Mongoose default connection disconnected through app termination'
-        );
+        Logger.warn('Mongoose default connection disconnected through app termination');
         process.exit(0);
       });
     });

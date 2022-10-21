@@ -1,9 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import {
-  ExpressErrorMiddlewareInterface,
-  HttpError,
-  Middleware,
-} from 'routing-controllers';
+import { ExpressErrorMiddlewareInterface, HttpError, Middleware } from 'routing-controllers';
 
 @Middleware({ type: 'after' })
 class ErrorMiddleware implements ExpressErrorMiddlewareInterface {
@@ -13,7 +9,7 @@ class ErrorMiddleware implements ExpressErrorMiddlewareInterface {
 
       const response = {
         code: error.httpCode,
-        message: error.message,
+        message: error.message
       };
 
       res.status(error.httpCode).json(response);

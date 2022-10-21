@@ -14,11 +14,7 @@ import { useExpressServer } from 'routing-controllers';
 import { apiControllers } from './api';
 import { Db, Logger, Swagger } from './config';
 import { Env } from './constants';
-import {
-  ErrorMiddleware,
-  JwtPassportMiddleware,
-  MorganMiddleware,
-} from './middlewares';
+import { ErrorMiddleware, JwtPassportMiddleware, MorganMiddleware } from './middlewares';
 
 class App {
   private express: express.Express;
@@ -34,7 +30,7 @@ class App {
     this.express.use(
       ExpressStatusMonitor({
         title: 'Free Stuff api',
-        path: '/api/status',
+        path: '/api/status'
       })
     );
 
@@ -55,7 +51,7 @@ class App {
       session({
         secret: Env.JWT_SECRET,
         resave: false,
-        saveUninitialized: false,
+        saveUninitialized: false
       })
     );
     this.express.use(passport.initialize());
@@ -77,7 +73,7 @@ class App {
     useExpressServer(this.express, {
       cors: {
         origin: ['http://localhost:3000'],
-        credentials: true,
+        credentials: true
       },
       controllers: controllers,
       defaultErrorHandler: false,
@@ -99,13 +95,9 @@ class App {
   }
 
   public async start(): Promise<void> {
-    new Promise(resolve => {
+    new Promise((resolve) => {
       this.httpServer = this.express.listen(this.port, () => {
-        Logger.info(
-          `App is running at http://localhost:${
-            this.port
-          } in ${this.express.get('env')} mode`
-        );
+        Logger.info(`App is running at http://localhost:${this.port} in ${this.express.get('env')} mode`);
         Logger.warn('Press CTRL-C to stop');
 
         resolve(this.httpServer?.address());
@@ -116,7 +108,7 @@ class App {
   public async stop(): Promise<void> {
     return new Promise((resolve, reject) => {
       if (this.httpServer) {
-        this.httpServer.close(error => {
+        this.httpServer.close((error) => {
           if (error) {
             return reject(error);
           }

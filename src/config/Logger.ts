@@ -12,15 +12,12 @@ class WinstonLogger {
         winston.format.simple(),
         winston.format.splat(),
         winston.format.timestamp({
-          format: 'DD-MM-YYYY HH:mm:ss',
+          format: 'DD-MM-YYYY HH:mm:ss'
         }),
-        winston.format.printf(
-          ({ timestamp, level, message, ms }) =>
-            `[${timestamp}] ${level}: ${message} ${ms}`
-        ),
+        winston.format.printf(({ timestamp, level, message, ms }) => `[${timestamp}] ${level}: ${message} ${ms}`),
         winston.format.colorize({ all: true })
       ),
-      transports: [new winston.transports.Console()],
+      transports: [new winston.transports.Console()]
     });
   }
 

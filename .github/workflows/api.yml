@@ -34,6 +34,6 @@ jobs:
 
       - name: 🧪 Run tests
         env:
-          API_PREFIX_PATH: ${{ secrets.API_PREFIX_PATH }}
+          JWT_EXPIRE: ${{ secrets.JWT_EXPIRE }}
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
         run: yarn test

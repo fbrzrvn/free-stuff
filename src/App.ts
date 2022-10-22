@@ -77,8 +77,7 @@ class App {
       },
       controllers: controllers,
       defaultErrorHandler: false,
-      middlewares: [ErrorMiddleware],
-      routePrefix: '/api'
+      middlewares: [ErrorMiddleware]
     });
   }
 

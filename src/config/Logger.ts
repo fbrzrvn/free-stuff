@@ -1,10 +1,14 @@
 import winston, { Logger as WinstonLoggerType } from 'winston';
 
+import { Env } from '../constants';
+
 class WinstonLogger {
   private logger: WinstonLoggerType;
 
   constructor() {
     this.logger = winston.createLogger({
+      level: Env.NODE === 'prod' ? 'info' : 'debug',
+      levels: winston.config.npm.levels,
       format: winston.format.combine(
         winston.format.errors({ stacks: true }),
         winston.format.ms(),

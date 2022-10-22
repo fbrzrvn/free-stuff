@@ -2,6 +2,7 @@ import { plainToInstance } from 'class-transformer';
 import { validate, ValidationError } from 'class-validator';
 import { NextFunction, Request, RequestHandler, Response } from 'express';
 
+import { ValidValue } from '../api/shared/enums';
 import { HttpException } from '../exceptions/HttpException';
 
 class ValidateMiddleware {
@@ -14,7 +15,7 @@ class ValidateMiddleware {
 
   static validate(
     type: any,
-    value: 'body' | 'query' | 'params' = 'body',
+    value: ValidValue = ValidValue.Body,
     skipMissingProperties = false,
     whitelist = true,
     forbidNonWhitelisted = true

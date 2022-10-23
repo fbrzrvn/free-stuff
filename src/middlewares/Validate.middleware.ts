@@ -10,6 +10,7 @@ class ValidateMiddleware {
     if (error.constraints) {
       return Object.values(error.constraints);
     }
+
     return error.children?.map(this._getAllNestedErrors).join(',');
   }
 
@@ -22,6 +23,7 @@ class ValidateMiddleware {
   ): RequestHandler {
     return (req: Request, _res: Response, next: NextFunction) => {
       const obj = plainToInstance(type, req[value]);
+
       validate(obj, {
         skipMissingProperties,
         whitelist,
@@ -29,6 +31,7 @@ class ValidateMiddleware {
       }).then((errors: ValidationError[]) => {
         if (errors.length > 0) {
           const message = errors.map(this._getAllNestedErrors).join(', ');
+
           next(new HttpException(400, message));
         } else {
           next();

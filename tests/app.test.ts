@@ -1,7 +1,6 @@
 import supertest, { SuperTest, Test } from 'supertest';
 
 import { App } from '../src/App';
-import { Logger } from '../src/config';
 
 describe('App test suite', () => {
   const app = new App();
@@ -20,8 +19,6 @@ describe('App test suite', () => {
       // Act
       const response = await server.get('/api/status').expect(200);
 
-      Logger.debug(response.status.toString());
-
       // Assert
       expect(response.status).toBe(200);
     });
@@ -31,8 +28,6 @@ describe('App test suite', () => {
     it('should return 301 as status code', async () => {
       // Act
       const response = await server.get('/api/swagger').expect(301);
-
-      Logger.debug(response.status.toString());
 
       // Assert
       expect(response.status).toBe(301);

@@ -2,7 +2,7 @@ import { Request } from 'express';
 import passport from 'passport';
 import { ExtractJwt, Strategy as JwtStrategy, StrategyOptions } from 'passport-jwt';
 
-// import { JwtTokenDto } from '../api/auth/dto';
+import { JwtDto } from '../api/auth/dto';
 import { Env } from '../constants';
 
 const cookieExtrator = (req: Request): string | null => {
@@ -21,7 +21,7 @@ const opts: StrategyOptions = {
   secretOrKey: Env.JWT_SECRET
 };
 
-const JwtPassportMiddleware = new JwtStrategy(opts, async (tokenPayload: any, done) => {
+const JwtPassportMiddleware = new JwtStrategy(opts, async (tokenPayload: JwtDto, done) => {
   try {
     return done(null, tokenPayload);
   } catch (error) {
@@ -34,7 +34,7 @@ passport.serializeUser(function (user, done) {
 });
 
 passport.deserializeUser(function (user, done) {
-  done(null, user as any);
+  done(null, user as JwtDto);
 });
 
 export { JwtPassportMiddleware };

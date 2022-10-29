@@ -28,6 +28,12 @@ class UpdateUserDto {
   readonly email?: string;
 
   @IsOptional()
+  @IsString()
+  @MinLength(6)
+  @Transform(({ value }) => value?.trim())
+  readonly password?: string;
+
+  @IsOptional()
   @IsEnum(UserRole)
   @IsNotEmpty()
   readonly role?: UserRole;

@@ -21,7 +21,7 @@ import { ValidateMiddleware } from '../../middlewares';
 import { IdDto, QueryDto } from '../shared/dto';
 import { ValidValue } from '../shared/enums';
 import { QueryAllResponse, RequestWithUser } from '../shared/types';
-import { CreateUserDto, ResponseUserDto, UpdateUserDto } from './dto';
+import { ChangePasswordDto, CreateUserDto, ResponseUserDto, UpdateUserDto } from './dto';
 import { UserService } from './user.service';
 
 @JsonController('/api/users', { transformResponse: false })
@@ -53,10 +53,36 @@ class UserController {
   async update(@Req() req: RequestWithUser, @Body() userData: UpdateUserDto): Promise<ResponseUserDto | HttpException> {
     const { id } = req.user;
 
+    if (Boolean(userData.password) === true) {
+      throw new BadRequestError('Password can not be change');
+    }
+
+    if (Boolean(userData.role) === true) {
+      throw new BadRequestError('Role can not be change');
+    }
+
     const user = await this.userService.updateById(id, userData);
 
     if (Boolean(user) === false) {
       throw new NotFoundError('User not found');
+    }
+
+    return user as ResponseUserDto;
+  }
+
+  @Put('/profile/change-password')
+  @OpenAPI({ summary: 'Change password' })
+  @UseBefore(ValidateMiddleware.validate(ChangePasswordDto))
+  async changePassword(
+    @Req() req: RequestWithUser,
+    @Body() userData: ChangePasswordDto
+  ): Promise<ResponseUserDto | HttpException> {
+    const { id } = req.user;
+
+    const user = await this.userService.changePassword(id, userData);
+
+    if (Boolean(user) === false) {
+      throw new BadRequestError('Password is not correct');
     }
 
     return user as ResponseUserDto;

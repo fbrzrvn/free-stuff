@@ -1,6 +1,8 @@
 import supertest, { SuperTest, Test } from 'supertest';
 
 import { CreateUserDto, UpdateUserDto } from '../../../src/api/users/dto';
+import { ChangePasswordDto } from '../../../src/api/users/dto/change-password.dto';
+import { UserRole } from '../../../src/api/users/schema/user.schema';
 import { App } from '../../../src/App';
 import { Db } from '../../config/Db';
 import { mappedUser } from '../../fixtures/user';
@@ -62,7 +64,7 @@ describe('Users test suite', () => {
       expect(response.status).toBe(401);
     });
 
-    it('should return 400 as status code if user when user data fail the validation', async () => {
+    it('should return 400 as status code when user data fail the validation', async () => {
       // Arrange
       const userData: UpdateUserDto = {
         country: ''
@@ -78,6 +80,42 @@ describe('Users test suite', () => {
       // Assert
       expect(response.status).toBe(400);
       expect(response.body.message).toBe('country should not be empty');
+    });
+
+    it('should return 400 as status code when user contains password', async () => {
+      // Arrange
+      const userData: UpdateUserDto = {
+        password: 'lerelle'
+      };
+
+      // Act
+      const response = await server
+        .put('/api/users/profile/update')
+        .set('Authorization', 'Bearer ' + _token)
+        .send(userData)
+        .expect(400);
+
+      // Assert
+      expect(response.status).toBe(400);
+      expect(response.body.message).toBe('Password can not be change');
+    });
+
+    it('should return 400 as status code when user contains role', async () => {
+      // Arrange
+      const userData: UpdateUserDto = {
+        role: UserRole.Admin
+      };
+
+      // Act
+      const response = await server
+        .put('/api/users/profile/update')
+        .set('Authorization', 'Bearer ' + _token)
+        .send(userData)
+        .expect(400);
+
+      // Assert
+      expect(response.status).toBe(400);
+      expect(response.body.message).toBe('Role can not be change');
     });
 
     it('should return 200 as status code with the updated user', async () => {
@@ -96,6 +134,55 @@ describe('Users test suite', () => {
       // Assert
       expect(response.status).toBe(200);
       expect(response.body).toMatchObject(user);
+    });
+  });
+
+  describe('PUT /api/users/profile/change-password', () => {
+    it('should return 400 as status code when old password fail the validation', async () => {
+      // Arrange
+      const userData: ChangePasswordDto = { oldPassword: 'wrongPassword', newPassword: 'lerelle' };
+
+      // Act
+      const response = await server
+        .put('/api/users/profile/change-password')
+        .set('Authorization', 'Bearer ' + _token)
+        .send(userData)
+        .expect(400);
+
+      // Assert
+      expect(response.status).toBe(400);
+      expect(response.body.message).toBe('Password is not correct');
+    });
+
+    it('should return 400 as status code when new password fail the validation', async () => {
+      // Arrange
+      const userData: ChangePasswordDto = { oldPassword: 'lerelle', newPassword: 'lere' };
+
+      // Act
+      const response = await server
+        .put('/api/users/profile/change-password')
+        .set('Authorization', 'Bearer ' + _token)
+        .send(userData)
+        .expect(400);
+
+      // Assert
+      expect(response.status).toBe(400);
+      expect(response.body.message).toBe('newPassword must be longer than or equal to 6 characters');
+    });
+
+    it('should return 200 as status code', async () => {
+      // Arrange
+      const userData: ChangePasswordDto = { oldPassword: 'lerelle', newPassword: 'lerelle01' };
+
+      // Act
+      const response = await server
+        .put('/api/users/profile/change-password')
+        .set('Authorization', 'Bearer ' + _token)
+        .send(userData)
+        .expect(200);
+
+      // Assert
+      expect(response.status).toBe(200);
     });
   });
 

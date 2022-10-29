@@ -1,6 +1,6 @@
 import { FilterQuery } from 'mongoose';
-import { LoginDto, RegisterDto } from '../auth/dto';
 
+import { LoginDto, RegisterDto } from '../auth/dto';
 import { CreateUserDto, UpdateUserDto } from './dto';
 import { UserDocument, UserModel } from './schema/user.schema';
 
@@ -64,6 +64,26 @@ class UserRepository {
     }
 
     return user;
+  }
+
+  async changePassword(id: string, oldPassword: string, newPassword: string) {
+    const user = await this.userModel.findById(id);
+
+    const isPasswordMatch = await user?.comparePassword(oldPassword);
+
+    if (isPasswordMatch === false) {
+      return null;
+    }
+
+    const hashPassword = await user?.hashPassword(newPassword);
+
+    const updatedUser = await this.userModel
+      .findByIdAndUpdate(id, { $set: { password: hashPassword } }, { returnOriginal: false })
+      .select('-__v -password -createdAt -updatedAt')
+      .lean()
+      .exec();
+
+    return updatedUser;
   }
 }
 

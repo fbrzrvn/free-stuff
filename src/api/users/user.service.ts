@@ -1,5 +1,5 @@
 import { QueryAllResponse } from '../shared/types';
-import { CreateUserDto, ResponseUserDto, UpdateUserDto } from './dto';
+import { ChangePasswordDto, CreateUserDto, ResponseUserDto, UpdateUserDto } from './dto';
 import { userMapper } from './user.mapper';
 import { UserRepository } from './user.repository';
 
@@ -67,6 +67,16 @@ class UserService {
     const user = await this.userRepository.deleteOne({ _id: id });
 
     return Boolean(user);
+  }
+
+  async changePassword(id: string, userData: ChangePasswordDto) {
+    const user = await this.userRepository.changePassword(id, userData.oldPassword, userData.newPassword);
+
+    if (Boolean(user) === false) {
+      return null;
+    }
+
+    return userMapper(user);
   }
 }
 

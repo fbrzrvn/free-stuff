@@ -22,7 +22,7 @@ const getUserClaims = async (server: SuperTest<Test>) => {
   const tokenResponse = await server.post('/api/auth/login').send(user);
 
   id = userResponse.body.id;
-  token = tokenResponse.body;
+  token = tokenResponse.body.accessToken;
 
   return { id, token };
 };

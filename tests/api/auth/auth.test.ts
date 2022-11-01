@@ -1,4 +1,5 @@
 import supertest, { SuperTest, Test } from 'supertest';
+import { RefreshTokenDto } from '../../../src/api/auth/dto';
 
 import { App } from '../../../src/App';
 import { Db } from '../../config/Db';
@@ -8,7 +9,8 @@ describe('Auth test suite', () => {
   const app = new App();
   let server: SuperTest<Test>;
 
-  let _token: string;
+  let access_token: string;
+  let refresh_token: string;
 
   beforeAll(async () => {
     await Db.connect();
@@ -138,7 +140,49 @@ describe('Auth test suite', () => {
       // Act
       const response = await server.post('/api/auth/login').send(userData).expect(200);
 
-      _token = response.body;
+      access_token = response.body.accessToken;
+      refresh_token = response.body.refreshToken;
+
+      // Assert
+      expect(response.status).toBe(200);
+      expect(response.body).toBeDefined();
+    });
+  });
+
+  describe('POST /api/auth/refresh-token', () => {
+    it('should return 400 as status code when the token is not a jwt token', async () => {
+      // Arrange
+      const tokenData: RefreshTokenDto = { token: 'fak3.t0k3n' };
+
+      // Act
+      const response = await server.post('/api/auth/refresh-token').send(tokenData).expect(400);
+
+      // Assert
+      expect(response.status).toBe(400);
+      expect(response.body.message).toBe('jwt malformed');
+    });
+
+    it('should return 403 as status code when the token is not valid', async () => {
+      // Arrange
+      const tokenData: RefreshTokenDto = {
+        token:
+          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzNjEwYTRiODYyZTQ4NjZlOTk0MDkxNSIsImlhdCI6MTY2NzMwNDAxMiwiZXhwIjoxNjY3MzA0OTEyLCJ0eXBlIjoiYWNjZXNzIn0.pBdPiKfvc_Zd8pU7bDbtV44QqduBopEM9ILSFeag9yA'
+      };
+
+      // Act
+      const response = await server.post('/api/auth/refresh-token').send(tokenData).expect(403);
+
+      // Assert
+      expect(response.status).toBe(403);
+      expect(response.body.message).toBe('Invalid token');
+    });
+
+    it('should return 200 as status code with the new generated tokens', async () => {
+      // Arrange
+      const tokenData: RefreshTokenDto = { token: refresh_token };
+
+      // Act
+      const response = await server.post('/api/auth/refresh-token').send(tokenData).expect(200);
 
       // Assert
       expect(response.status).toBe(200);
@@ -159,7 +203,8 @@ describe('Auth test suite', () => {
       // Act
       const response = await server
         .post('/api/auth/logout')
-        .set('Authorization', 'Bearer ' + _token)
+        .set('Authorization', 'Bearer ' + access_token)
+        // .set('Cookie', [`access_token=${access_token}`])
         .expect(200);
 
       // Assert

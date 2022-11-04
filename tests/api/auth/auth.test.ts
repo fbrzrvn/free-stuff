@@ -156,14 +156,14 @@ describe('Auth test suite', () => {
   describe('POST /api/auth/refresh-token', () => {
     it('should return 400 as status code when the token is not a jwt token', async () => {
       // Arrange
-      const tokenData: RefreshTokenDto = { token: 'fak3.t0k3n', userId: id };
+      const tokenData: RefreshTokenDto = { token: 'fat0k3n', userId: id };
 
       // Act
-      const response = await server.post('/api/auth/refresh-token').send(tokenData).expect(400);
+      const response = await server.post('/api/auth/refresh-token').send(tokenData);
 
       // Assert
       expect(response.status).toBe(400);
-      expect(response.body.message).toBe('jwt malformed');
+      expect(response.body.message).toBe('token must be a jwt string');
     });
 
     it('should return 401 as status code when the token is not valid', async () => {

@@ -99,13 +99,7 @@ class TokenService {
 
       return { accessToken, refreshToken };
     } catch (error) {
-      const errorMessage = (error as Error).message;
-
-      if (errorMessage === 'Invalid token' || errorMessage === 'jwt expired') {
-        throw new UnauthorizedError('Invalid token');
-      }
-
-      throw new BadRequestError((error as Error).message);
+      throw new UnauthorizedError('Invalid token');
     }
   }
 

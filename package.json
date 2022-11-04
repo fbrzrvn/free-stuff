@@ -7,7 +7,7 @@
     "dev": "nodemon index.ts",
     "start": "ts-node dist/src/index.js",
     "build": "tsc -p .",
-    "test": "jest --verbose",
+    "test": "jest --verbose --forceExit",
     "test:watch": "jest --verbose --watchAll",
     "test:coverage": "jest --verbose --coverage",
     "lint": "tslint src/**/*.ts{,x}",

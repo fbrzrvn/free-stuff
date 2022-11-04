@@ -1,3 +1,4 @@
+import { EmailService } from '../shared/services';
 import { Nullable } from '../shared/types';
 import { ResponseUserDto } from '../users/dto';
 import { userMapper } from '../users/user.mapper';
@@ -7,10 +8,12 @@ import { TokenService } from './token.service';
 
 class AuthService extends TokenService {
   private readonly userRepository: UserRepository;
+  private readonly emailService: EmailService;
 
   constructor() {
     super();
     this.userRepository = new UserRepository();
+    this.emailService = new EmailService();
   }
 
   async register(userData: RegisterDto): Promise<Nullable<ResponseUserDto>> {
@@ -61,6 +64,16 @@ class AuthService extends TokenService {
     }
 
     const linkToResetPassword = await this.generateLinkToResetPassword(user?._id);
+
+    this.emailService.send(
+      user?.email as string,
+      'Reset password',
+      ` <p>Hi ${user?.username},</p>
+        <P>this email is to reset your password. If you don't request this change ignore this message.</p>
+        <p>Click the link below to reset your password</p>
+        <a href="${linkToResetPassword}}">Reset Password</a>
+      `
+    );
 
     return linkToResetPassword;
   }

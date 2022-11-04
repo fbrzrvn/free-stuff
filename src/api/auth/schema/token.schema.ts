@@ -7,11 +7,11 @@ export enum TokenType {
 }
 
 export interface TokenDocument extends Document {
-  createdAt: Date
-  expires: Date
-  token: string
-  type: TokenType
-  userId: string
+  createdAt: Date;
+  expires: Date;
+  token: string;
+  type: TokenType;
+  userId: string;
 }
 
 const TokenSchema: Schema = new Schema({

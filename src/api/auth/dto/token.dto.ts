@@ -1,4 +1,5 @@
-import { IsJWT } from 'class-validator';
+import { IsJWT, IsMongoId } from 'class-validator';
+
 import { TokenType } from '../schema/token.schema';
 
 class TokenDto {
@@ -11,6 +12,14 @@ class TokenDto {
 class RefreshTokenDto {
   @IsJWT()
   readonly token: string;
+
+  @IsMongoId()
+  readonly userId: string;
 }
 
-export { RefreshTokenDto, TokenDto };
+class ResponseTokenDto {
+  accessToken: string;
+  refreshToken: string;
+}
+
+export { RefreshTokenDto, ResponseTokenDto, TokenDto };

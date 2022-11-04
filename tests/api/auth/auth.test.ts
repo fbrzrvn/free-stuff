@@ -1,5 +1,5 @@
 import supertest, { SuperTest, Test } from 'supertest';
-import { RefreshTokenDto } from '../../../src/api/auth/dto';
+import { ForgotPasswordDto, RefreshTokenDto, ResetPasswordDto } from '../../../src/api/auth/dto';
 
 import { App } from '../../../src/App';
 import { Db } from '../../config/Db';
@@ -11,6 +11,8 @@ describe('Auth test suite', () => {
 
   let access_token: string;
   let refresh_token: string;
+  let id: string;
+  let resetPasswordLink: string;
 
   beforeAll(async () => {
     await Db.connect();
@@ -77,6 +79,8 @@ describe('Auth test suite', () => {
 
       // Act
       const response = await server.post('/api/auth/register').send(userData).expect(201);
+
+      id = response.body.id;
 
       // Assert
       expect(response.status).toBe(201);
@@ -152,7 +156,7 @@ describe('Auth test suite', () => {
   describe('POST /api/auth/refresh-token', () => {
     it('should return 400 as status code when the token is not a jwt token', async () => {
       // Arrange
-      const tokenData: RefreshTokenDto = { token: 'fak3.t0k3n' };
+      const tokenData: RefreshTokenDto = { token: 'fak3.t0k3n', userId: id };
 
       // Act
       const response = await server.post('/api/auth/refresh-token').send(tokenData).expect(400);
@@ -162,24 +166,25 @@ describe('Auth test suite', () => {
       expect(response.body.message).toBe('jwt malformed');
     });
 
-    it('should return 403 as status code when the token is not valid', async () => {
+    it('should return 401 as status code when the token is not valid', async () => {
       // Arrange
       const tokenData: RefreshTokenDto = {
         token:
-          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzNjEwYTRiODYyZTQ4NjZlOTk0MDkxNSIsImlhdCI6MTY2NzMwNDAxMiwiZXhwIjoxNjY3MzA0OTEyLCJ0eXBlIjoiYWNjZXNzIn0.pBdPiKfvc_Zd8pU7bDbtV44QqduBopEM9ILSFeag9yA'
+          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzNjEwYTRiODYyZTQ4NjZlOTk0MDkxNSIsImlhdCI6MTY2NzMwNDAxMiwiZXhwIjoxNjY3MzA0OTEyLCJ0eXBlIjoiYWNjZXNzIn0.pBdPiKfvc_Zd8pU7bDbtV44QqduBopEM9ILSFeag9yA',
+        userId: id
       };
 
       // Act
-      const response = await server.post('/api/auth/refresh-token').send(tokenData).expect(403);
+      const response = await server.post('/api/auth/refresh-token').send(tokenData).expect(401);
 
       // Assert
-      expect(response.status).toBe(403);
+      expect(response.status).toBe(401);
       expect(response.body.message).toBe('Invalid token');
     });
 
     it('should return 200 as status code with the new generated tokens', async () => {
       // Arrange
-      const tokenData: RefreshTokenDto = { token: refresh_token };
+      const tokenData: RefreshTokenDto = { token: refresh_token, userId: id };
 
       // Act
       const response = await server.post('/api/auth/refresh-token').send(tokenData).expect(200);
@@ -210,6 +215,62 @@ describe('Auth test suite', () => {
       // Assert
       expect(response.status).toBe(200);
       expect(response.body.message).toBe('Logout success');
+    });
+  });
+
+  describe('POST /api/auth/forgot-password', () => {
+    it('should return 400 as status code when email does not exist', async () => {
+      // Arrange
+      const forgotPasswordData: ForgotPasswordDto = { email: 'fulanito@email.com' };
+
+      // Act
+      const response = await server.post(`/api/auth/forgot-password`).send(forgotPasswordData).expect(404);
+
+      // Assert
+      expect(response.status).toBe(404);
+      expect(response.body.message).toBe('User not found with email: fulanito@email.com');
+    });
+
+    it('should return 200 as status code', async () => {
+      // Arrange
+      const forgotPasswordData: ForgotPasswordDto = { email: 'lerelle@email.com' };
+
+      // Act
+      const response = await server.post(`/api/auth/forgot-password`).send(forgotPasswordData).expect(200);
+
+      resetPasswordLink = response.body;
+
+      // Assert
+      expect(response.status).toBe(200);
+      expect(response.body).toBeDefined();
+    });
+  });
+
+  describe('POST /api/auth/reset-password/:id/:token', () => {
+    it('should return 403 as status code when token is invalid or expired', async () => {
+      // Arrange
+      const resetPasswordData: ResetPasswordDto = { password: 'lerelle' };
+      const token = 'bb74d89d60d32863620040ea3b3f92efd4c03bcf24294cfc3f28bab0c9eea968';
+
+      // Act
+      const response = await server.post(`/api/auth/reset-password/${id}/${token}`).send(resetPasswordData).expect(403);
+
+      // Assert
+      expect(response.status).toBe(403);
+      expect(response.body.message).toBe('Invalid token or expired');
+    });
+
+    it('should return 200 as status code', async () => {
+      // Arrange
+      const resetPasswordData: ResetPasswordDto = { password: 'lerelle' };
+      const token = resetPasswordLink.replace(`http://localhost:3000/api/auth/reset-password/${id}/`, '');
+
+      // Act
+      const response = await server.post(`/api/auth/reset-password/${id}/${token}`).send(resetPasswordData).expect(200);
+
+      // Assert
+      expect(response.status).toBe(200);
+      expect(response.body.message).toBe('Password successfully updated');
     });
   });
 });

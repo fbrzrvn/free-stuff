@@ -15,14 +15,10 @@ class TokenRepository {
     return await this.tokenModel.findOne(criteria);
   }
 
-  async deleteOne(criteria: FilterQuery<TokenDocument>) {
-    return await this.tokenModel.findOneAndDelete(criteria);
-  }
-
   async validate(tokenData: string) {
     const verifiedToken = jwt.verify(tokenData, Env.JWT_SECRET, { ignoreExpiration: false }) as jwt.JwtPayload;
 
-    const token = await this.tokenModel.findOne({ token: tokenData, userId: verifiedToken.id });
+    const token = await this.findOne({ token: tokenData, userId: verifiedToken.id });
 
     if (Boolean(token) === false) {
       throw new Error('Invalid token');

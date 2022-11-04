@@ -1,28 +1,19 @@
-import { CookieOptions } from 'express';
-import jwt from 'jsonwebtoken';
-import moment from 'moment';
-import { BadRequestError, ForbiddenError } from 'routing-controllers';
-
-import { Env, ONE_DAY_IN_MILLISECONDS } from '../../constants';
-import { DocumentResponse } from '../shared/types';
+import { Nullable } from '../shared/types';
 import { ResponseUserDto } from '../users/dto';
-import { UserDocument } from '../users/schema/user.schema';
 import { userMapper } from '../users/user.mapper';
 import { UserRepository } from '../users/user.repository';
-import { LoginDto, RegisterDto, TokenDto } from './dto';
-import { TokenType } from './schema/token.schema';
-import { TokenRepository } from './token.repository';
+import { LoginDto, RegisterDto, ResponseTokenDto } from './dto';
+import { TokenService } from './token.service';
 
-class AuthService {
-  private readonly tokenRepository: TokenRepository;
+class AuthService extends TokenService {
   private readonly userRepository: UserRepository;
 
   constructor() {
-    this.tokenRepository = new TokenRepository();
+    super();
     this.userRepository = new UserRepository();
   }
 
-  async register(userData: RegisterDto): Promise<ResponseUserDto | null> {
+  async register(userData: RegisterDto): Promise<Nullable<ResponseUserDto>> {
     const { email, username } = userData;
 
     const existingEmail = await this.userRepository.findOne({ email });
@@ -44,119 +35,42 @@ class AuthService {
     return userMapper(user);
   }
 
-  async loginWithEmailAndPassword(userData: LoginDto): Promise<any | null> {
+  async loginWithEmailAndPassword(userData: LoginDto): Promise<Nullable<ResponseTokenDto>> {
     const user = await this.userRepository.validate(userData);
 
     if (Boolean(user) === false) {
       return null;
     }
 
-    const token = await this.tokenRepository.findOne({ userId: user?._id });
+    const token = await this.findTokenByUserId(user?._id);
 
     if (Boolean(token) === true) {
       await token?.remove();
     }
 
-    const { accessToken, refreshToken } = await this._generateAuthTokens(user);
+    const { accessToken, refreshToken } = await this.generateAndSaveAuthTokens(user?._id as string);
 
     return { accessToken, refreshToken };
   }
 
-  generateCookieOptions() {
-    const accessTokenCookieOptions: CookieOptions = {
-      expires: moment().add(Env.JWT_ACCESS_EXPIRE, 'ms').toDate(),
-      maxAge: parseInt(Env.JWT_ACCESS_EXPIRE),
-      httpOnly: true,
-      sameSite: 'lax'
-    };
+  async forgotPassword(userEmail: string): Promise<Nullable<string>> {
+    const user = await this.userRepository.findOne({ email: userEmail });
 
-    const refreshTokenCookieOptions: CookieOptions = {
-      expires: moment().add(Env.JWT_REFRESH_EXPIRE, 'd').toDate(),
-      maxAge: parseInt(Env.JWT_REFRESH_EXPIRE) * ONE_DAY_IN_MILLISECONDS,
-      httpOnly: true,
-      sameSite: 'lax'
-    };
-
-    return { accessTokenCookieOptions, refreshTokenCookieOptions };
-  }
-
-  async refreshToken(token: string) {
-    try {
-      const refreshTokenDocument = await this.tokenRepository.validate(token);
-
-      const user = await this.userRepository.findById(refreshTokenDocument?.userId as string);
-
-      await refreshTokenDocument?.remove();
-
-      const { accessToken, refreshToken } = await this._generateAuthTokens(user);
-
-      return { accessToken, refreshToken };
-    } catch (error) {
-      const errorMessage = (error as Error).message;
-
-      if (errorMessage === 'Invalid token' || errorMessage === 'jwt expired') {
-        throw new ForbiddenError('Invalid token');
-      }
-
-      throw new BadRequestError((error as Error).message);
+    if (Boolean(user) === false) {
+      return null;
     }
+
+    const linkToResetPassword = await this.generateLinkToResetPassword(user?._id);
+
+    return linkToResetPassword;
   }
 
-  async removeToken(userId: string) {
-    try {
-      const tokenDocument = await this.tokenRepository.findOne({ userId });
+  async resetPassword(userId: string, token: string, password: string): Promise<boolean> {
+    await this.validateEmailToken(token);
 
-      await tokenDocument?.remove();
-    } catch (error) {
-      if ((error as Error).message === 'Invalid token') {
-        throw new ForbiddenError('Invalid token');
-      }
+    const user = await this.userRepository.resetPassword(userId, password);
 
-      throw new BadRequestError((error as Error).message);
-    }
-  }
-
-  private async _generateAuthTokens(user: DocumentResponse<UserDocument>) {
-    const accessToken = this._generateToken(
-      user?._id,
-      moment().add(Env.JWT_ACCESS_EXPIRE, 'ms').unix(),
-      TokenType.Access
-    );
-
-    const refreshToken = this._generateToken(
-      user?._id,
-      moment().add(Env.JWT_REFRESH_EXPIRE, 'd').unix(),
-      TokenType.Refresh
-    );
-
-    await this._saveToken(
-      refreshToken,
-      TokenType.Refresh,
-      user?._id,
-      moment().add(Env.JWT_REFRESH_EXPIRE, 'd').toDate()
-    );
-
-    return { accessToken, refreshToken };
-  }
-
-  private _generateToken(userId: string, expiresIn: number, type: TokenType) {
-    const payload: TokenDto = {
-      id: userId,
-      iat: moment().unix(),
-      exp: expiresIn,
-      type
-    };
-
-    return jwt.sign(payload, Env.JWT_SECRET);
-  }
-
-  private async _saveToken(token: string, type: TokenType, userId: string, expires: Date) {
-    return await this.tokenRepository.create({
-      token,
-      type,
-      userId,
-      expires
-    });
+    return Boolean(user);
   }
 }
 

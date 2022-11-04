@@ -75,10 +75,30 @@ class UserRepository {
       return null;
     }
 
-    const hashPassword = await user?.hashPassword(newPassword);
+    const hashedPassword = (await user?.hashPassword(newPassword)) as string;
 
+    const updatedUser = await this._setPassword(id, hashedPassword);
+
+    return updatedUser;
+  }
+
+  async resetPassword(id: string, password: string) {
+    const user = await this.userModel.findById(id);
+
+    if (Boolean(user) === false) {
+      return null;
+    }
+
+    const hashedPassword = (await user?.hashPassword(password)) as string;
+
+    const updatedUser = await this._setPassword(id, hashedPassword);
+
+    return updatedUser;
+  }
+
+  private async _setPassword(id: string, hashedPassword: string) {
     const updatedUser = await this.userModel
-      .findByIdAndUpdate(id, { $set: { password: hashPassword } }, { returnOriginal: false })
+      .findByIdAndUpdate(id, { $set: { password: hashedPassword } })
       .select('-__v -password -createdAt -updatedAt')
       .lean()
       .exec();

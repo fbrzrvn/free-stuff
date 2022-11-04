@@ -9,7 +9,6 @@ class LoginDto {
 
   @IsString()
   @MinLength(6)
-  @Transform(({ value }) => value?.trim())
   readonly password: string;
 }
 

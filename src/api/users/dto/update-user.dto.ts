@@ -30,7 +30,6 @@ class UpdateUserDto {
   @IsOptional()
   @IsString()
   @MinLength(6)
-  @Transform(({ value }) => value?.trim())
   readonly password?: string;
 
   @IsOptional()

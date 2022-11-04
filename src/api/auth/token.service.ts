@@ -24,7 +24,7 @@ class TokenService {
       throw new ForbiddenError('Invalid token or expired');
     }
 
-    if (moment(existingToken?.expires).isSameOrAfter(moment())) {
+    if (moment(existingToken?.expires).isSameOrBefore(moment())) {
       throw new ForbiddenError('Invalid token or expired');
     }
 

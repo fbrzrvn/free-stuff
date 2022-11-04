@@ -52,7 +52,7 @@ class TokenService {
 
     const token = crypto.randomBytes(32).toString('hex');
 
-    await this._saveToken(token, TokenType.Reset, userId, moment().add(Env.JWT_ACTIVATED_EXPIRE, 'ms').toDate());
+    await this._saveToken(token, TokenType.Reset, userId, moment().add(Env.JWT_RESET_EXPIRE, 'ms').toDate());
 
     return `http://localhost:3000/api/auth/reset-password/${userId}/${token}`;
   }

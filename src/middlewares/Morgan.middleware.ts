@@ -14,6 +14,7 @@ class MorganHandlerMiddleware {
     if (Env.NODE === 'prod') {
       this.errorResponseFormat =
         ':remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version" :status :res[content-length] message: :message ":referrer" ":user-agent"';
+
       this.successResponseFormat =
         '::remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version" :status :res[content-length] ":referrer" ":user-agent"';
     }

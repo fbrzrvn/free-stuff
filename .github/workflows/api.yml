@@ -1,8 +1,6 @@
 name: 🐳 Api CI
 
 on:
-  push:
-    branches: [main]
   pull_request:
     branches:
       - '*'
@@ -34,6 +32,9 @@ jobs:
 
       - name: 🧪 Run tests
         env:
-          JWT_EXPIRE: ${{ secrets.JWT_EXPIRE }}
+          JWT_ACCESS_EXPIRE: ${{ secrets.JWT_ACCESS_EXPIRE }}
+          JWT_ACTIVATE_EXPIRE: ${{ secrets.JWT_ACTIVATE_EXPIRE }}
+          JWT_REFRESH_EXPIRE: ${{ secrets.JWT_REFRESH_EXPIRE }}
+          JWT_RESET_EXPIRE: ${{ secrets.JWT_RESET_EXPIRE }}
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
         run: yarn test

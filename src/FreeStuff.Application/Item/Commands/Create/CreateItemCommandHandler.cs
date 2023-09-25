@@ -6,7 +6,7 @@ using MediatR;
 
 namespace FreeStuff.Application.Item.Commands.Create;
 
-internal class CreateItemCommandHandler : IRequestHandler<CreateItemCommand, ErrorOr<ItemEntity>>
+public class CreateItemCommandHandler : IRequestHandler<CreateItemCommand, ErrorOr<ItemEntity>>
 {
     private readonly IItemRepository _itemRepository;
 
@@ -16,20 +16,13 @@ internal class CreateItemCommandHandler : IRequestHandler<CreateItemCommand, Err
     {
         await Task.CompletedTask;
 
-        if (_itemRepository.GetItemByTitle(command.Title) is not null) return Errors.Item.DuplicateTitle;
+        if (_itemRepository.GetByTitleAsync(command.Title) is not null) return Errors.Item.DuplicateTitleError;
 
-        // var item = new ItemEntity
-        // {
-        //     Id          = Guid.NewGuid(),
-        //     Title       = command.Title,
-        //     Description = command.Description,
-        //     Condition   = command.Condition
-        // };
         var userId = UserId.CreateUnique();
 
         var item = ItemEntity.Create(command.Title, command.Description, command.Condition, userId);
 
-        _itemRepository.Create(item);
+        _itemRepository.CreateAsync(item);
 
         return item;
     }

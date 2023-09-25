@@ -2,9 +2,11 @@ namespace FreeStuff.Domain.Item;
 
 public interface IItemRepository
 {
-    void Create(ItemEntity itemEntity);
+    void CreateAsync(ItemEntity itemEntity);
 
-    ItemEntity? GetItem(Guid id);
+    ItemEntity? GetAsync(Guid id);
 
-    ItemEntity? GetItemByTitle(string title);
+    ItemEntity? GetByTitleAsync(string title);
+
+    IEnumerable<ItemEntity> GetAllAsync();
 }

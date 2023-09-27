@@ -18,8 +18,4 @@
     </ItemGroup>
 
 
-    <ItemGroup>
-        <Folder Include="User\Queries\"/>
-    </ItemGroup>
-
 </Project>

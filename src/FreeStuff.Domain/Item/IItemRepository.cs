@@ -10,5 +10,7 @@ public interface IItemRepository
 
     IEnumerable<ItemEntity> GetAllAsync();
 
+    ItemEntity? UpdateAsync(Guid id, string title, string description, string condition);
+
     bool DeleteAsync(Guid id);
 }

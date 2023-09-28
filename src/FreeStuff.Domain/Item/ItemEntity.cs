@@ -5,13 +5,6 @@ namespace FreeStuff.Domain.Item;
 
 public sealed class ItemEntity : AggregateRoot<ItemId>
 {
-    public string   Title           { get; }
-    public string   Description     { get; }
-    public string   Condition       { get; }
-    public UserId   UserId          { get; }
-    public DateTime CreatedDateTime { get; }
-    public DateTime UpdatedDateTime { get; }
-
     private ItemEntity
     (
         ItemId   id,
@@ -30,6 +23,13 @@ public sealed class ItemEntity : AggregateRoot<ItemId>
         CreatedDateTime = createdDateTime;
         UpdatedDateTime = updatedDateTime;
     }
+
+    public string   Title           { get; set; }
+    public string   Description     { get; set; }
+    public string   Condition       { get; set; }
+    public UserId   UserId          { get; }
+    public DateTime CreatedDateTime { get; }
+    public DateTime UpdatedDateTime { get; set; }
 
     public static ItemEntity Create(string title, string description, string condition, UserId userId)
     {

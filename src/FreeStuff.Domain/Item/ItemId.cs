@@ -4,24 +4,15 @@ namespace FreeStuff.Domain.Item;
 
 public sealed class ItemId : ValueObject
 {
+    private ItemId(Guid value) { Value = value; }
+
+    public ItemId() { }
+
     public Guid Value { get; }
 
-    private ItemId(Guid value)
-    {
-        Value = value;
-    }
+    public static ItemId CreateUnique() { return new ItemId(Guid.NewGuid()); }
 
-    public ItemId()
-    {
-    }
+    public static ItemId Create(Guid id) { return new ItemId(id); }
 
-    public static ItemId CreateUnique()
-    {
-        return new ItemId(Guid.NewGuid());
-    }
-
-    public override IEnumerable<object> GetEqualityComponents()
-    {
-        yield return Value;
-    }
+    protected override IEnumerable<object> GetEqualityComponents() { yield return Value; }
 }

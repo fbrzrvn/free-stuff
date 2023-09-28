@@ -1,5 +1,6 @@
 using FreeStuff.Application.Item.Commands.Create;
 using FreeStuff.Application.Item.Commands.Delete;
+using FreeStuff.Application.Item.Commands.Update;
 using FreeStuff.Application.Item.Queries.Get;
 using FreeStuff.Application.Item.Queries.GetAll;
 using FreeStuff.Contracts.Item;
@@ -52,6 +53,18 @@ public class ItemController : ApiController
         var result = await _sender.Send(query);
 
         return Ok(_mapper.Map<List<ItemResponse>>(result));
+    }
+
+    [HttpPut("{id}")]
+    public async Task<IActionResult> Update([FromRoute] Guid id, ItemRequest request)
+    {
+        var command = new UpdateItemCommand(id, request.Title, request.Description, request.Condition);
+        var result  = await _sender.Send(command);
+
+        return result.Match(
+            item => Ok(_mapper.Map<ItemResponse>(item)),
+            errors => Problem(errors)
+        );
     }
 
     [HttpDelete("{id}")]

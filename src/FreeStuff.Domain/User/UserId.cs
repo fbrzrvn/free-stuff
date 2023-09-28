@@ -2,26 +2,15 @@ using FreeStuff.Domain.common.Models;
 
 namespace FreeStuff.Domain.User;
 
-public sealed class UserId: ValueObject
+public sealed class UserId : ValueObject
 {
+    private UserId(Guid value) { Value = value; }
+
+    public UserId() { }
+
     public Guid Value { get; }
 
-    private UserId(Guid value)
-    {
-        Value = value;
-    }
+    public static UserId CreateUnique() { return new UserId(Guid.NewGuid()); }
 
-    public UserId()
-    {
-    }
-
-    public static UserId CreateUnique()
-    {
-        return new UserId(Guid.NewGuid());
-    }
-
-    public override IEnumerable<object> GetEqualityComponents()
-    {
-        yield return Value;
-    }
+    protected override IEnumerable<object> GetEqualityComponents() { yield return Value; }
 }

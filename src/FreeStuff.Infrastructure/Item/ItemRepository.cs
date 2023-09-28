@@ -19,6 +19,20 @@ public class ItemRepository : IItemRepository
 
     public IEnumerable<ItemEntity> GetAllAsync() { return _items; }
 
+    public ItemEntity? UpdateAsync(Guid id, string title, string description, string condition)
+    {
+        var itemIndex = _items.FindIndex(item => item.Id.Value == id);
+
+        if (itemIndex == -1) return null;
+
+        _items[itemIndex].Title           = title;
+        _items[itemIndex].Description     = description;
+        _items[itemIndex].Condition       = condition;
+        _items[itemIndex].UpdatedDateTime = DateTime.UtcNow;
+
+        return _items[itemIndex];
+    }
+
     public bool DeleteAsync(Guid id)
     {
         var item = GetAsync(id);

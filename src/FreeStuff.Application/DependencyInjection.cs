@@ -1,7 +1,6 @@
 using System.Reflection;
 using FluentValidation;
 using FreeStuff.Application.common;
-using FreeStuff.Application.Item;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 

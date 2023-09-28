@@ -25,7 +25,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\src\FreeStuff.Application\FreeStuff.Application.csproj"/>
         <ProjectReference Include="..\..\src\FreeStuff.Infrastructure\FreeStuff.Infrastructure.csproj"/>
     </ItemGroup>
 

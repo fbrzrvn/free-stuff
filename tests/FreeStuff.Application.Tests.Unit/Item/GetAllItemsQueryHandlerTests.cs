@@ -1,6 +1,7 @@
 using FluentAssertions;
 using FreeStuff.Application.Item.Queries.GetAll;
 using FreeStuff.Domain.Item;
+using FreeStuff.Infrastructure.Item;
 using NSubstitute;
 
 namespace FreeStuff.Application.Tests.Unit.Item;
@@ -8,12 +9,9 @@ namespace FreeStuff.Application.Tests.Unit.Item;
 public class GetAllItemsQueryHandlerTests
 {
     private readonly GetAllItemsQueryHandler _handler;
-    private readonly IItemRepository  _itemRepository = Substitute.For<IItemRepository>();
+    private readonly IItemRepository         _itemRepository = Substitute.For<ItemRepository>();
 
-    public GetAllItemsQueryHandlerTests()
-    {
-        _handler = new GetAllItemsQueryHandler(_itemRepository);
-    }
+    public GetAllItemsQueryHandlerTests() { _handler = new GetAllItemsQueryHandler(_itemRepository); }
 
     [Fact]
     public async Task GetAllItemQueryHandler_ShouldReturnItemsList_WhenCalled()
@@ -25,6 +23,6 @@ public class GetAllItemsQueryHandlerTests
         var actual = await _handler.Handle(query, CancellationToken.None);
 
         // Assert
-        actual.Should().NotBeNull();
+        actual.Should().HaveCount(0);
     }
 }

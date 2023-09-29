@@ -56,9 +56,9 @@ public class ItemController : ApiController
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> Update([FromRoute] Guid id, ItemRequest request)
+    public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] ItemRequest request)
     {
-        var command = new UpdateItemCommand(id, request.Title, request.Description, request.Condition);
+        var command = _mapper.Map<UpdateItemCommand>((id, request));
         var result  = await _sender.Send(command);
 
         return result.Match(
@@ -70,8 +70,8 @@ public class ItemController : ApiController
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete([FromRoute] Guid id)
     {
-        var query  = new DeleteItemCommand(id);
-        var result = await _sender.Send(query);
+        var command = new DeleteItemCommand(id);
+        var result  = await _sender.Send(command);
 
         return result.Match(
             _ => Ok(),

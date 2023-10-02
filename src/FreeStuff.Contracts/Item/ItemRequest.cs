@@ -4,5 +4,6 @@ public record ItemRequest
 (
     string Title,
     string Description,
-    string Condition
+    string Condition,
+    Guid   UserId
 );

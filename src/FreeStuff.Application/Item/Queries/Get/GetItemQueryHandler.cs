@@ -11,13 +11,11 @@ public class GetItemQueryHandler : IRequestHandler<GetItemQuery, ErrorOr<ItemEnt
 
     public GetItemQueryHandler(IItemRepository itemRepository) { _itemRepository = itemRepository; }
 
-    public async Task<ErrorOr<ItemEntity>> Handle(GetItemQuery request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<ItemEntity>> Handle(GetItemQuery query, CancellationToken cancellationToken)
     {
-        await Task.CompletedTask;
+        var item = await _itemRepository.GetAsync(query.Id);
 
-        var item = _itemRepository.GetAsync(request.Id);
-
-        if (item is null) return Errors.Item.NotFoundError(request.Id);
+        if (item is null) return Errors.Item.NotFoundError(query.Id);
 
         return item;
     }

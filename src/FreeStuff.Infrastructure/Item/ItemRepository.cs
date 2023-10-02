@@ -1,42 +1,58 @@
 using FreeStuff.Domain.Item;
+using Microsoft.EntityFrameworkCore;
 
 namespace FreeStuff.Infrastructure.Item;
 
 public class ItemRepository : IItemRepository
 {
-    private static readonly List<ItemEntity> _items = new();
+    private readonly FreeStuffDbContext _dbContext;
 
-    public bool CreateAsync(ItemEntity itemEntity)
+    public ItemRepository(FreeStuffDbContext dbContext) { _dbContext = dbContext; }
+
+    public async Task<bool> CreateAsync(ItemEntity itemEntity)
     {
-        _items.Add(itemEntity);
+        _dbContext.Add(itemEntity);
 
-        return GetByTitleAsync(itemEntity.Title) is not null;
+        await _dbContext.SaveChangesAsync();
+
+        return await GetByTitleAsync(itemEntity.Title) is not null;
     }
 
-    public ItemEntity? GetAsync(Guid id) { return _items.SingleOrDefault(item => item.Id.Value == id); }
-
-    public ItemEntity? GetByTitleAsync(string title) { return _items.SingleOrDefault(item => item.Title == title); }
-
-    public IEnumerable<ItemEntity> GetAllAsync() { return _items; }
-
-    public ItemEntity? UpdateAsync(Guid id, string title, string description, string condition)
+    public async Task<ItemEntity?> GetAsync(Guid id)
     {
-        var itemIndex = _items.FindIndex(item => item.Id.Value == id);
+            var item = await _dbContext.Items.FirstOrDefaultAsync();
+            return item;
 
-        if (itemIndex == -1) return null;
-
-        _items[itemIndex].Title           = title;
-        _items[itemIndex].Description     = description;
-        _items[itemIndex].Condition       = condition;
-        _items[itemIndex].UpdatedDateTime = DateTime.UtcNow;
-
-        return _items[itemIndex];
     }
 
-    public bool DeleteAsync(Guid id)
+    public async Task<ItemEntity?> GetByTitleAsync(string title)
     {
-        var item = GetAsync(id);
+        return await _dbContext.Items.SingleOrDefaultAsync(
+            item => item.Title == title
+        );
+    }
 
-        return item is not null && _items.Remove(item);
+    public async Task<IEnumerable<ItemEntity>?> GetAllAsync() { return await _dbContext.Items.ToListAsync(); }
+
+    public async Task<bool> UpdateAsync(ItemEntity itemEntity)
+    {
+        _dbContext.Items.Update(itemEntity);
+
+        await _dbContext.SaveChangesAsync();
+
+        return true;
+    }
+
+    public async Task<bool> DeleteAsync(Guid id)
+    {
+        var item = await GetAsync(id);
+
+        if (item is null) return false;
+
+        _dbContext.Items.Remove(item);
+
+        await _dbContext.SaveChangesAsync();
+
+        return true;
     }
 }

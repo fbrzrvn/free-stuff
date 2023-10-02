@@ -11,14 +11,14 @@ public class UpdateItemCommandHandler : IRequestHandler<UpdateItemCommand, Error
 
     public UpdateItemCommandHandler(IItemRepository itemRepository) { _itemRepository = itemRepository; }
 
-    public async Task<ErrorOr<ItemEntity>> Handle(UpdateItemCommand request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<ItemEntity>> Handle(UpdateItemCommand command, CancellationToken cancellationToken)
     {
-        await Task.CompletedTask;
+        var itemEntity = await _itemRepository.GetAsync(command.Id);
 
-        var item = _itemRepository.UpdateAsync(request.Id, request.Title, request.Description, request.Condition);
+        if (itemEntity is null) return Errors.Item.NotFoundError(command.Id);
 
-        if (item is null) return Errors.Item.NotFoundError(request.Id);
+        await _itemRepository.UpdateAsync(itemEntity);
 
-        return item;
+        return itemEntity;
     }
 }

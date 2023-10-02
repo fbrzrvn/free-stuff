@@ -7,15 +7,10 @@ public class GetAllItemsQueryHandler : IRequestHandler<GetAllItemsQuery, IEnumer
 {
     private readonly IItemRepository _itemRepository;
 
-    public GetAllItemsQueryHandler(IItemRepository itemRepository)
-    {
-        _itemRepository = itemRepository;
-    }
+    public GetAllItemsQueryHandler(IItemRepository itemRepository) { _itemRepository = itemRepository; }
 
-    public async Task<IEnumerable<ItemEntity>> Handle(GetAllItemsQuery request, CancellationToken cancellationToken)
+    public async Task<IEnumerable<ItemEntity>> Handle(GetAllItemsQuery query, CancellationToken cancellationToken)
     {
-        await Task.CompletedTask;
-
-        return _itemRepository.GetAllAsync().ToList();
+        return await _itemRepository.GetAllAsync() ?? new List<ItemEntity>();
     }
 }

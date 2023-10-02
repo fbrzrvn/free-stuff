@@ -9,5 +9,6 @@ public record UpdateItemCommand
     Guid   Id,
     string Title,
     string Description,
-    string Condition
+    string Condition,
+    Guid   UserId
 ) : IRequest<ErrorOr<ItemEntity>>;

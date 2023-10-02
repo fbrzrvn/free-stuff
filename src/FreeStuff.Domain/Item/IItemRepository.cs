@@ -2,15 +2,15 @@ namespace FreeStuff.Domain.Item;
 
 public interface IItemRepository
 {
-    bool CreateAsync(ItemEntity itemEntity);
+    Task<bool> CreateAsync(ItemEntity itemEntity);
 
-    ItemEntity? GetAsync(Guid id);
+    Task<ItemEntity?> GetAsync(Guid id);
 
-    ItemEntity? GetByTitleAsync(string title);
+    Task<ItemEntity?> GetByTitleAsync(string title);
 
-    IEnumerable<ItemEntity> GetAllAsync();
+    Task<IEnumerable<ItemEntity>?> GetAllAsync();
 
-    ItemEntity? UpdateAsync(Guid id, string title, string description, string condition);
+    Task<bool> UpdateAsync(ItemEntity itemEntity);
 
-    bool DeleteAsync(Guid id);
+    Task<bool> DeleteAsync(Guid id);
 }

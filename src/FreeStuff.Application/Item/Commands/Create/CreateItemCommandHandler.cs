@@ -14,15 +14,16 @@ public class CreateItemCommandHandler : IRequestHandler<CreateItemCommand, Error
 
     public async Task<ErrorOr<ItemEntity>> Handle(CreateItemCommand command, CancellationToken cancellationToken)
     {
-        await Task.CompletedTask;
+        if (await _itemRepository.GetByTitleAsync(command.Title) is not null) return Errors.Item.DuplicateTitleError;
 
-        if (_itemRepository.GetByTitleAsync(command.Title) is not null) return Errors.Item.DuplicateTitleError;
+        var item = ItemEntity.Create(
+            command.Title,
+            command.Description,
+            command.Condition,
+            UserId.Create(command.UserId)
+        );
 
-        var userId = UserId.CreateUnique();
-
-        var item = ItemEntity.Create(command.Title, command.Description, command.Condition, userId);
-
-        _itemRepository.CreateAsync(item);
+        await _itemRepository.CreateAsync(item);
 
         return item;
     }

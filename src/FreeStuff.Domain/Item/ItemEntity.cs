@@ -24,16 +24,18 @@ public sealed class ItemEntity : AggregateRoot<ItemId>
         UpdatedDateTime = updatedDateTime;
     }
 
+    private ItemEntity() { }
+
     public string   Title           { get; set; }
     public string   Description     { get; set; }
     public string   Condition       { get; set; }
-    public UserId   UserId          { get; }
-    public DateTime CreatedDateTime { get; }
+    public UserId   UserId          { get; set; }
+    public DateTime CreatedDateTime { get; set; }
     public DateTime UpdatedDateTime { get; set; }
 
     public static ItemEntity Create(string title, string description, string condition, UserId userId)
     {
-        return new ItemEntity(
+        var item = new ItemEntity(
             ItemId.CreateUnique(),
             title,
             description,
@@ -42,5 +44,7 @@ public sealed class ItemEntity : AggregateRoot<ItemId>
             DateTime.UtcNow,
             DateTime.UtcNow
         );
+
+        return item;
     }
 }

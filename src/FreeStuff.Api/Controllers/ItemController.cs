@@ -34,7 +34,7 @@ public class ItemController : ApiController
         );
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("{id:guid}")]
     public async Task<IActionResult> Get([FromRoute] Guid id)
     {
         var query  = new GetItemQuery(id);
@@ -55,7 +55,7 @@ public class ItemController : ApiController
         return Ok(_mapper.Map<List<ItemResponse>>(result));
     }
 
-    [HttpPut("{id}")]
+    [HttpPut("{id:guid}")]
     public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] ItemRequest request)
     {
         var command = _mapper.Map<UpdateItemCommand>((id, request));
@@ -67,7 +67,7 @@ public class ItemController : ApiController
         );
     }
 
-    [HttpDelete("{id}")]
+    [HttpDelete("{id:guid}")]
     public async Task<IActionResult> Delete([FromRoute] Guid id)
     {
         var command = new DeleteItemCommand(id);

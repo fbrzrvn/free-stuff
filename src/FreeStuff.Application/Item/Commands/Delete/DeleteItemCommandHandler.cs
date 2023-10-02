@@ -11,13 +11,11 @@ public class DeleteItemCommandHandler : IRequestHandler<DeleteItemCommand, Error
 
     public DeleteItemCommandHandler(IItemRepository itemRepository) { _itemRepository = itemRepository; }
 
-    public async Task<ErrorOr<bool>> Handle(DeleteItemCommand request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<bool>> Handle(DeleteItemCommand command, CancellationToken cancellationToken)
     {
-        await Task.CompletedTask;
+        var isItemDeleted = await _itemRepository.DeleteAsync(command.Id);
 
-        var isItemDeleted = _itemRepository.DeleteAsync(request.Id);
-
-        if (!isItemDeleted) return Errors.Item.NotFoundError(request.Id);
+        if (!isItemDeleted) return Errors.Item.NotFoundError(command.Id);
 
         return true;
     }

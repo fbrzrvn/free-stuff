@@ -1,6 +1,7 @@
 using FreeStuff.Api.Controllers.Items.Requests;
 using FreeStuff.Items.Application.Create;
 using FreeStuff.Items.Application.Get;
+using FreeStuff.Items.Application.GetAll;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -37,7 +38,7 @@ public class ItemsController : ApiController
         );
     }
 
-    [HttpGet("{id:guid}", Name = "Get")]
+    [HttpGet("{id}", Name = "Get")]
     public async Task<IActionResult> Get([FromRoute] Guid id, CancellationToken cancellationToken)
     {
         var query  = new GetItemQuery(id);
@@ -45,6 +46,18 @@ public class ItemsController : ApiController
 
         return result.Match(
             item => Ok(item),
+            errors => Problem(errors)
+        );
+    }
+
+    [HttpGet("")]
+    public async Task<IActionResult> GetAll([FromQuery] GetAllItemsRequest request, CancellationToken cancellationToken)
+    {
+        var query  = new GetAllItemQuery(request.Page, request.Limit);
+        var result = await _bus.Send(query, cancellationToken);
+
+        return result.Match(
+            items => Ok(items),
             errors => Problem(errors)
         );
     }

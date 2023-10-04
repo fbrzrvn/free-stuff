@@ -1,5 +1,7 @@
 using ErrorOr;
 using FreeStuff.Items.Application.Shared;
+using FreeStuff.Items.Domain;
+using FreeStuff.Items.Domain.Errors;
 using FreeStuff.Items.Domain.Ports;
 using FreeStuff.Items.Domain.ValueObjects;
 using MediatR;
@@ -19,7 +21,7 @@ public sealed class GetItemQueryHandler : IRequestHandler<GetItemQuery, ErrorOr<
     {
         var item = await _itemRepository.GetAsync(ItemId.Create(request.Id));
 
-        if (item is null) throw new NullReferenceException();
+        if (item is null) return Errors.Item.NotFoundError(request.Id);
 
         return item.MapToItemDto();
     }

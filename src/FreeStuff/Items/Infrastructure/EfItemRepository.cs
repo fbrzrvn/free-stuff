@@ -22,7 +22,7 @@ public class EfItemRepository : IItemRepository
 
     public async Task<Item?> GetAsync(ItemId id)
     {
-        var item = await _context.Items.SingleAsync(i => i.Id == id);
+        var item = await _context.Items.SingleOrDefaultAsync(i => i.Id == id);
 
         return item;
     }
@@ -34,9 +34,12 @@ public class EfItemRepository : IItemRepository
         return item;
     }
 
-    public async Task<IEnumerable<Item>?> GetAllAsync()
+    public async Task<IEnumerable<Item>?> GetAllAsync(int page, int limit)
     {
-        var items = await _context.Items.ToListAsync();
+        var items = await _context.Items.OrderByDescending(item => item.CreatedDateTime)
+                                  .Skip((page - 1) * limit)
+                                  .Take(limit)
+                                  .ToListAsync();
 
         return items;
     }
@@ -54,5 +57,10 @@ public class EfItemRepository : IItemRepository
     public async Task SaveChangesAsync()
     {
         await _context.SaveChangesAsync();
+    }
+
+    public int GetCount()
+    {
+        return _context.Items.Count();
     }
 }

@@ -10,11 +10,13 @@ public interface IItemRepository
 
     Task<Item?> GetByTitleAsync(string title);
 
-    Task<IEnumerable<Item>?> GetAllAsync();
+    Task<IEnumerable<Item>?> GetAllAsync(int page, int limit);
 
     void Update(Item item);
 
     void Delete(Item item);
 
     Task SaveChangesAsync();
+
+    public int GetCount();
 }

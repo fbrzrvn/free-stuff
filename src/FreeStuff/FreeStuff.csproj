@@ -8,7 +8,6 @@
 
     <ItemGroup>
         <Folder Include="Items\Application\Delete\"/>
-        <Folder Include="Items\Application\GetAll\"/>
         <Folder Include="Items\Application\Update\"/>
     </ItemGroup>
 

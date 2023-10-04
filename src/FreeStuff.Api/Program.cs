@@ -15,7 +15,7 @@ var builder = WebApplication.CreateBuilder(args);
     );
 
     builder.Services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviors<,>));
-    builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+    builder.Services.AddValidatorsFromAssembly(typeof(IApplicationMarker).GetTypeInfo().Assembly);
 
     builder.Services.AddDbContext<FreeStuffDbContext>(
         options => options.UseSqlServer(builder.Configuration.GetConnectionString("Default"))

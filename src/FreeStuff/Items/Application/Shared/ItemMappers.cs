@@ -1,3 +1,4 @@
+using FreeStuff.Items.Application.GetAll;
 using FreeStuff.Items.Domain;
 using FreeStuff.Items.Domain.Enum;
 
@@ -13,6 +14,19 @@ public static class ItemMappers
         { ItemCondition.AsGoodAsNew, "As good as new" },
         { ItemCondition.HasGivenItAll, "Has given it all" }
     };
+
+    public static ItemsDto MapToItemsDto(this IEnumerable<Item> items, int page, int limit, int totalResults)
+    {
+        var itemsDto = new ItemsDto
+        {
+            Data         = items.Select(MapToItemDto),
+            Page         = page,
+            Limit        = limit,
+            TotalResults = totalResults
+        };
+
+        return itemsDto;
+    }
 
     public static ItemDto MapToItemDto(this Item item)
     {

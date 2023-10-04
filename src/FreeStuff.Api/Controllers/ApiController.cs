@@ -9,7 +9,10 @@ public class ApiController : ControllerBase
 {
     protected IActionResult Problem(List<Error> errors)
     {
-        if (errors.All(error => error.Type == ErrorType.Validation)) return ValidationProblem(errors);
+        if (errors.All(error => error.Type == ErrorType.Validation))
+        {
+            return ValidationProblem(errors);
+        }
 
         var firstError = errors[0];
 
@@ -34,7 +37,10 @@ public class ApiController : ControllerBase
     {
         var modelStateDictionary = new ModelStateDictionary();
 
-        foreach (var error in errors) modelStateDictionary.AddModelError(error.Code, error.Description);
+        foreach (var error in errors)
+        {
+            modelStateDictionary.AddModelError(error.Code, error.Description);
+        }
 
         return ValidationProblem(modelStateDictionary);
     }

@@ -1,12 +1,27 @@
-using FreeStuff.Api;
-using FreeStuff.Application;
-using FreeStuff.Infrastructure;
+using System.Reflection;
+using FluentValidation;
+using FreeStuff;
+using FreeStuff.Items.Domain.Ports;
+using FreeStuff.Items.Infrastructure;
+using FreeStuff.Shared.Application.Behaviors;
+using FreeStuff.Shared.Infrastructure;
+using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 {
-    builder.Services.AddApplication();
-    builder.Services.AddInfrastructure();
-    builder.Services.AddPresentation();
+    builder.Services.AddMediatR(
+        cfg => cfg.RegisterServicesFromAssembly(typeof(IApplicationMarker).GetTypeInfo().Assembly)
+    );
+
+    builder.Services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviors<,>));
+    builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+
+    builder.Services.AddDbContext<FreeStuffDbContext>(
+        options => options.UseSqlServer(builder.Configuration.GetConnectionString("Default"))
+    );
+
+    builder.Services.AddScoped<IItemRepository, EfItemRepository>();
 
     builder.Services.AddControllers();
     builder.Services.AddEndpointsApiExplorer();
@@ -21,12 +36,8 @@ var app = builder.Build();
         app.UseSwaggerUI();
     }
 
-    app.UseExceptionHandler("/error");
-
     app.UseHttpsRedirection();
-
     app.UseAuthorization();
-
     app.MapControllers();
 
     app.Run();

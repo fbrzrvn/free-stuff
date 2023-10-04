@@ -18,5 +18,5 @@ public interface IItemRepository
 
     Task SaveChangesAsync();
 
-    public int GetCount();
+    int GetCount();
 }

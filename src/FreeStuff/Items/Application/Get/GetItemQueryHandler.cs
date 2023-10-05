@@ -1,9 +1,9 @@
 using ErrorOr;
 using FreeStuff.Items.Application.Shared;
-using FreeStuff.Items.Application.Shared.Mapping;
 using FreeStuff.Items.Domain.Errors;
 using FreeStuff.Items.Domain.Ports;
 using FreeStuff.Items.Domain.ValueObjects;
+using MapsterMapper;
 using MediatR;
 
 namespace FreeStuff.Items.Application.Get;
@@ -11,10 +11,12 @@ namespace FreeStuff.Items.Application.Get;
 public sealed class GetItemQueryHandler : IRequestHandler<GetItemQuery, ErrorOr<ItemDto>>
 {
     private readonly IItemRepository _itemRepository;
+    private readonly IMapper         _mapper;
 
-    public GetItemQueryHandler(IItemRepository itemRepository)
+    public GetItemQueryHandler(IItemRepository itemRepository, IMapper mapper)
     {
         _itemRepository = itemRepository;
+        _mapper         = mapper;
     }
 
     public async Task<ErrorOr<ItemDto>> Handle(GetItemQuery request, CancellationToken cancellationToken)
@@ -23,6 +25,8 @@ public sealed class GetItemQueryHandler : IRequestHandler<GetItemQuery, ErrorOr<
 
         if (item is null) return Errors.Item.NotFoundError(request.Id);
 
-        return item.MapToItemDto();
+        var result = _mapper.Map<ItemDto>(item);
+
+        return result;
     }
 }

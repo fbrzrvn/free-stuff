@@ -5,6 +5,8 @@ using FreeStuff.Items.Domain.Ports;
 using FreeStuff.Items.Infrastructure;
 using FreeStuff.Shared.Application.Behaviors;
 using FreeStuff.Shared.Infrastructure;
+using Mapster;
+using MapsterMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -22,6 +24,11 @@ var builder = WebApplication.CreateBuilder(args);
     );
 
     builder.Services.AddScoped<IItemRepository, EfItemRepository>();
+
+    var config = TypeAdapterConfig.GlobalSettings;
+    config.Scan(Assembly.GetExecutingAssembly());
+    builder.Services.AddSingleton(config);
+    builder.Services.AddScoped<IMapper, ServiceMapper>();
 
     builder.Services.AddControllers();
     builder.Services.AddEndpointsApiExplorer();

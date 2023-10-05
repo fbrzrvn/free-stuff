@@ -3,6 +3,7 @@ using FreeStuff.Items.Domain.Ports;
 using ErrorOr;
 using FreeStuff.Items.Application.Shared;
 using FreeStuff.Items.Application.Shared.Mapping;
+using MapsterMapper;
 using MediatR;
 
 namespace FreeStuff.Items.Application.Create;
@@ -10,10 +11,12 @@ namespace FreeStuff.Items.Application.Create;
 public sealed class CreateItemCommandHandler : IRequestHandler<CreateItemCommand, ErrorOr<ItemDto>>
 {
     private readonly IItemRepository _itemRepository;
+    private readonly IMapper         _mapper;
 
-    public CreateItemCommandHandler(IItemRepository itemRepository)
+    public CreateItemCommandHandler(IItemRepository itemRepository, IMapper mapper)
     {
         _itemRepository = itemRepository;
+        _mapper         = mapper;
     }
 
     public async Task<ErrorOr<ItemDto>> Handle(CreateItemCommand request, CancellationToken cancellationToken)
@@ -28,6 +31,8 @@ public sealed class CreateItemCommandHandler : IRequestHandler<CreateItemCommand
         await _itemRepository.CreateAsync(item, cancellationToken);
         await _itemRepository.SaveChangesAsync();
 
-        return item.MapToItemDto();
+        var result = _mapper.Map<ItemDto>(item);
+
+        return result;
     }
 }

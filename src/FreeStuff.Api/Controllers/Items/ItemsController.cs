@@ -4,6 +4,7 @@ using FreeStuff.Items.Application.Delete;
 using FreeStuff.Items.Application.Get;
 using FreeStuff.Items.Application.GetAll;
 using FreeStuff.Items.Application.Update;
+using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,22 +14,19 @@ namespace FreeStuff.Api.Controllers.Items;
 public class ItemsController : ApiController
 {
     private readonly ISender _bus;
+    private readonly IMapper _mapper;
 
-    public ItemsController(ISender bus)
+    public ItemsController(ISender bus, IMapper mapper)
     {
-        _bus = bus;
+        _bus    = bus;
+        _mapper = mapper;
     }
 
     [HttpPost("")]
     public async Task<IActionResult> Create([FromBody] CreateItemRequest request, CancellationToken cancellationToken)
     {
-        var command = new CreateItemCommand(
-            request.Title,
-            request.Description,
-            request.Condition,
-            request.UserId
-        );
-        var result = await _bus.Send(command, cancellationToken);
+        var command = _mapper.Map<CreateItemCommand>(request);
+        var result  = await _bus.Send(command, cancellationToken);
 
         return result.Match(
             item => CreatedAtAction(
@@ -72,14 +70,8 @@ public class ItemsController : ApiController
         CancellationToken             cancellationToken
     )
     {
-        var command = new UpdateItemCommand(
-            id,
-            request.Title,
-            request.Description,
-            request.Condition,
-            request.UserId
-        );
-        var result = await _bus.Send(command, cancellationToken);
+        var command = _mapper.Map<UpdateItemCommand>((id, request));
+        var result  = await _bus.Send(command, cancellationToken);
 
         return result.Match(
             item => Ok(item),

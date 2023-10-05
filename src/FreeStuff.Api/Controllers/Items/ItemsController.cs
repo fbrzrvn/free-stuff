@@ -1,7 +1,9 @@
 using FreeStuff.Api.Controllers.Items.Requests;
 using FreeStuff.Items.Application.Create;
+using FreeStuff.Items.Application.Delete;
 using FreeStuff.Items.Application.Get;
 using FreeStuff.Items.Application.GetAll;
+using FreeStuff.Items.Application.Update;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -58,6 +60,41 @@ public class ItemsController : ApiController
 
         return result.Match(
             items => Ok(items),
+            errors => Problem(errors)
+        );
+    }
+
+    [HttpPut("{id}")]
+    public async Task<IActionResult> Update
+    (
+        [FromRoute] Guid              id,
+        [FromBody]  UpdateItemRequest request,
+        CancellationToken             cancellationToken
+    )
+    {
+        var command = new UpdateItemCommand(
+            id,
+            request.Title,
+            request.Description,
+            request.Condition,
+            request.UserId
+        );
+        var result = await _bus.Send(command, cancellationToken);
+
+        return result.Match(
+            item => Ok(item),
+            errors => Problem(errors)
+        );
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Delete([FromRoute] Guid id, CancellationToken cancellationToken)
+    {
+        var command = new DeleteItemCommand(id);
+        var result  = await _bus.Send(command, cancellationToken);
+
+        return result.Match(
+            _ => NoContent(),
             errors => Problem(errors)
         );
     }

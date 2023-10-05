@@ -52,7 +52,7 @@ public class Item : AggregateRoot<ItemId>
         return item;
     }
 
-    public void UpdateItem(string title, string description, ItemCondition condition)
+    public void Update(string title, string description, ItemCondition condition)
     {
         Title           = title;
         Description     = description;

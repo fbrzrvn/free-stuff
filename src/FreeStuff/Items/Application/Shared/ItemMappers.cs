@@ -1,4 +1,6 @@
+using FluentValidation;
 using FreeStuff.Items.Application.GetAll;
+using FreeStuff.Items.Application.Shared.Mapping;
 using FreeStuff.Items.Domain;
 using FreeStuff.Items.Domain.Enum;
 
@@ -6,15 +8,6 @@ namespace FreeStuff.Items.Application.Shared;
 
 public static class ItemMappers
 {
-    private static readonly Dictionary<ItemCondition, string> ConditionMapping = new()
-    {
-        { ItemCondition.New, "New" },
-        { ItemCondition.FairCondition, "Fair condition" },
-        { ItemCondition.GoodCondition, "Good condition" },
-        { ItemCondition.AsGoodAsNew, "As good as new" },
-        { ItemCondition.HasGivenItAll, "Has given it all" }
-    };
-
     public static ItemsDto MapToItemsDto(this IEnumerable<Item> items, int page, int limit, int totalResults)
     {
         var itemsDto = new ItemsDto
@@ -43,7 +36,7 @@ public static class ItemMappers
 
     public static ItemCondition MapStringToItemCondition(this string conditionString)
     {
-        foreach (var kvp in ConditionMapping)
+        foreach (var kvp in ItemConditionMapping.ConditionMapping)
         {
             if (kvp.Value.Equals(conditionString, StringComparison.OrdinalIgnoreCase))
             {
@@ -51,16 +44,16 @@ public static class ItemMappers
             }
         }
 
-        throw new ArgumentException("Invalid condition string");
+        throw new ValidationException($"Invalid item condition: {conditionString}");
     }
 
     private static string MapItemConditionToString(this ItemCondition condition)
     {
-        if (ConditionMapping.TryGetValue(condition, out var conditionString))
+        if (ItemConditionMapping.ConditionMapping.TryGetValue(condition, out var conditionString))
         {
             return conditionString;
         }
 
-        throw new ArgumentException("Invalid ItemCondition value");
+        throw new ValidationException($"Invalid item condition: {condition}");
     }
 }

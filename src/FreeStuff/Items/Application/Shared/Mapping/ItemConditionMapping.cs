@@ -1,3 +1,4 @@
+using FluentValidation;
 using FreeStuff.Items.Domain.Enum;
 
 namespace FreeStuff.Items.Application.Shared.Mapping;
@@ -12,4 +13,20 @@ public static class ItemConditionMapping
         { ItemCondition.AsGoodAsNew, "As good as new" },
         { ItemCondition.HasGivenItAll, "Has given it all" }
     };
+
+    public static ItemCondition MapStringToItemCondition(this string conditionString)
+    {
+        foreach (var kvp in ConditionMapping)
+            if (kvp.Value.Equals(conditionString, StringComparison.OrdinalIgnoreCase))
+                return kvp.Key;
+
+        throw new ValidationException($"Invalid item condition: {conditionString}");
+    }
+
+    public static string MapItemConditionToString(this ItemCondition condition)
+    {
+        if (ConditionMapping.TryGetValue(condition, out var conditionString)) return conditionString;
+
+        throw new ValidationException($"Invalid item condition: {condition}");
+    }
 }

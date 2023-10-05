@@ -1,6 +1,6 @@
 using ErrorOr;
 using FreeStuff.Items.Application.Shared;
-using FreeStuff.Items.Domain;
+using FreeStuff.Items.Application.Shared.Mapping;
 using FreeStuff.Items.Domain.Errors;
 using FreeStuff.Items.Domain.Ports;
 using FreeStuff.Items.Domain.ValueObjects;

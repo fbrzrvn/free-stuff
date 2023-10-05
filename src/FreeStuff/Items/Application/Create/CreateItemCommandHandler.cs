@@ -2,6 +2,7 @@ using FreeStuff.Items.Domain;
 using FreeStuff.Items.Domain.Ports;
 using ErrorOr;
 using FreeStuff.Items.Application.Shared;
+using FreeStuff.Items.Application.Shared.Mapping;
 using MediatR;
 
 namespace FreeStuff.Items.Application.Create;

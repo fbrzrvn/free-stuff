@@ -1,5 +1,5 @@
 using ErrorOr;
-using FreeStuff.Items.Application.Shared;
+using FreeStuff.Items.Application.Shared.Mapping;
 using FreeStuff.Items.Domain.Ports;
 using MediatR;
 

@@ -27,13 +27,6 @@ public class EfItemRepository : IItemRepository
         return item;
     }
 
-    public async Task<Item?> GetByTitleAsync(string title)
-    {
-        var item = await _context.Items.FindAsync(title);
-
-        return item;
-    }
-
     public async Task<IEnumerable<Item>?> GetAllAsync(int page, int limit)
     {
         var items = await _context.Items.OrderByDescending(item => item.CreatedDateTime)
@@ -61,6 +54,8 @@ public class EfItemRepository : IItemRepository
 
     public int GetCount()
     {
-        return _context.Items.Count();
+        var totalItems = _context.Items.Count();
+
+        return totalItems;
     }
 }

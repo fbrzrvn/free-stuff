@@ -8,8 +8,6 @@ public interface IItemRepository
 
     Task<Item?> GetAsync(ItemId id);
 
-    Task<Item?> GetByTitleAsync(string title);
-
     Task<IEnumerable<Item>?> GetAllAsync(int page, int limit);
 
     void Update(Item item);

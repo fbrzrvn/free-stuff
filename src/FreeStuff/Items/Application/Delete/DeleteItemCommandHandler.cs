@@ -6,7 +6,7 @@ using MediatR;
 
 namespace FreeStuff.Items.Application.Delete;
 
-public class DeleteItemCommandHandler : IRequestHandler<DeleteItemCommand, ErrorOr<bool>>
+public sealed class DeleteItemCommandHandler : IRequestHandler<DeleteItemCommand, ErrorOr<bool>>
 {
     private readonly IItemRepository _itemRepository;
 

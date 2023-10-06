@@ -9,7 +9,7 @@ using MediatR;
 
 namespace FreeStuff.Items.Application.Update;
 
-public class UpdateItemCommandHandler : IRequestHandler<UpdateItemCommand, ErrorOr<ItemDto>>
+public sealed class UpdateItemCommandHandler : IRequestHandler<UpdateItemCommand, ErrorOr<ItemDto>>
 {
     private readonly IItemRepository _itemRepository;
     private readonly IMapper         _mapper;
@@ -22,19 +22,19 @@ public class UpdateItemCommandHandler : IRequestHandler<UpdateItemCommand, Error
 
     public async Task<ErrorOr<ItemDto>> Handle(UpdateItemCommand request, CancellationToken cancellationToken)
     {
-        var existingItem = await _itemRepository.GetAsync(ItemId.Create(request.Id));
+        var item = await _itemRepository.GetAsync(ItemId.Create(request.Id));
 
-        if (existingItem is null) return Errors.Item.NotFoundError(request.Id);
+        if (item is null) return Errors.Item.NotFoundError(request.Id);
 
-        existingItem.Update(
+        item.Update(
             request.Title,
             request.Description,
             request.Condition.MapStringToItemCondition()
         );
-        _itemRepository.Update(existingItem);
+        _itemRepository.Update(item);
         await _itemRepository.SaveChangesAsync();
 
-        var result = _mapper.Map<ItemDto>(existingItem);
+        var result = _mapper.Map<ItemDto>(item);
 
         return result;
     }

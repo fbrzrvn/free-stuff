@@ -1,4 +1,4 @@
-namespace FreeStuff.Api.Controllers.Items.Requests;
+namespace FreeStuff.Contracts.Items.Requests;
 
 public record UpdateItemRequest
 (

@@ -26,7 +26,7 @@ var builder = WebApplication.CreateBuilder(args);
     builder.Services.AddScoped<IItemRepository, EfItemRepository>();
 
     var config = TypeAdapterConfig.GlobalSettings;
-    config.Scan(Assembly.GetExecutingAssembly());
+    config.Scan(typeof(Program).Assembly, typeof(IApplicationMarker).Assembly);
     builder.Services.AddSingleton(config);
     builder.Services.AddScoped<IMapper, ServiceMapper>();
 

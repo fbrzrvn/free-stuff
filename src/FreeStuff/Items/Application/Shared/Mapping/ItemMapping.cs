@@ -1,21 +1,13 @@
-using FreeStuff.Api.Controllers.Items.Requests;
 using FreeStuff.Items.Application.GetAll;
-using FreeStuff.Items.Application.Shared;
-using FreeStuff.Items.Application.Shared.Mapping;
-using FreeStuff.Items.Application.Update;
 using FreeStuff.Items.Domain;
 using Mapster;
 
-namespace FreeStuff.Api.Controllers.Items.Mapping;
+namespace FreeStuff.Items.Application.Shared.Mapping;
 
 public class ItemMapping : IRegister
 {
     public void Register(TypeAdapterConfig config)
     {
-        config.NewConfig<(Guid Id, UpdateItemRequest Request), UpdateItemCommand>()
-              .Map(dest => dest.Id, src => src.Id)
-              .Map(dest => dest, src => src.Request);
-
         config.NewConfig<Item, ItemDto>()
               .Map(dest => dest.Id, src => src.Id.Value)
               .Map(dest => dest.UserId, src => src.UserId.Value)

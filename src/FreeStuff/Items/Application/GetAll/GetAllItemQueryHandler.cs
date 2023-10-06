@@ -1,4 +1,5 @@
 using ErrorOr;
+using FreeStuff.Items.Application.Shared.Dto;
 using FreeStuff.Items.Domain;
 using FreeStuff.Items.Domain.Ports;
 using MapsterMapper;
@@ -6,7 +7,7 @@ using MediatR;
 
 namespace FreeStuff.Items.Application.GetAll;
 
-public sealed class GetAllItemQueryHandler : IRequestHandler<GetAllItemQuery, ErrorOr<ItemsDto>>
+public sealed class GetAllItemQueryHandler : IRequestHandler<GetAllItemQuery, ErrorOr<List<ItemDto>>>
 {
     private readonly IItemRepository _itemRepository;
     private readonly IMapper         _mapper;
@@ -17,19 +18,12 @@ public sealed class GetAllItemQueryHandler : IRequestHandler<GetAllItemQuery, Er
         _mapper         = mapper;
     }
 
-    public async Task<ErrorOr<ItemsDto>> Handle
+    public async Task<ErrorOr<List<ItemDto>>> Handle
         (GetAllItemQuery request, CancellationToken cancellationToken)
     {
-        var items      = await _itemRepository.GetAllAsync(request.Page, request.Limit);
-        var totalItems = _itemRepository.GetCount();
+        var items = await _itemRepository.GetAllAsync(request.Page, request.Limit);
 
-        var result = _mapper.Map<ItemsDto>(
-            (
-                (items ?? Array.Empty<Item>()).ToList(),
-                request,
-                totalItems
-            )
-        );
+        var result = _mapper.Map<List<ItemDto>>((items ?? Array.Empty<Item>()).ToList());
 
         return result;
     }

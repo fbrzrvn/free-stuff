@@ -17,6 +17,7 @@
     </ItemGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\FreeStuff.Contracts\FreeStuff.Contracts.csproj"/>
         <ProjectReference Include="..\FreeStuff\FreeStuff.csproj"/>
     </ItemGroup>
 

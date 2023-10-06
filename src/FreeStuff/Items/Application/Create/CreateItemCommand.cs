@@ -1,5 +1,5 @@
 using ErrorOr;
-using FreeStuff.Items.Application.Shared;
+using FreeStuff.Items.Application.Shared.Dto;
 using MediatR;
 
 namespace FreeStuff.Items.Application.Create;

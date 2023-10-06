@@ -1,4 +1,4 @@
-namespace FreeStuff.Items.Application.Shared;
+namespace FreeStuff.Items.Application.Shared.Dto;
 
 public class ItemDto
 {

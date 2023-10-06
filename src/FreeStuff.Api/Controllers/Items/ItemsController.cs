@@ -1,4 +1,5 @@
-using FreeStuff.Api.Controllers.Items.Requests;
+using FreeStuff.Contracts.Items.Requests;
+using FreeStuff.Contracts.Items.Responses;
 using FreeStuff.Items.Application.Create;
 using FreeStuff.Items.Application.Delete;
 using FreeStuff.Items.Application.Get;
@@ -45,7 +46,7 @@ public class ItemsController : ApiController
         var result = await _bus.Send(query, cancellationToken);
 
         return result.Match(
-            item => Ok(item),
+            item => Ok(_mapper.Map<ItemResponse>(item)),
             errors => Problem(errors)
         );
     }
@@ -57,7 +58,7 @@ public class ItemsController : ApiController
         var result = await _bus.Send(query, cancellationToken);
 
         return result.Match(
-            items => Ok(items),
+            items => Ok(_mapper.Map<ItemsResponse>((items, request, items.Count))),
             errors => Problem(errors)
         );
     }
@@ -74,7 +75,7 @@ public class ItemsController : ApiController
         var result  = await _bus.Send(command, cancellationToken);
 
         return result.Match(
-            item => Ok(item),
+            item => Ok(_mapper.Map<ItemResponse>(item)),
             errors => Problem(errors)
         );
     }

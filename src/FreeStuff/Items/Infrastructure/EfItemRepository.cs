@@ -51,11 +51,4 @@ public class EfItemRepository : IItemRepository
     {
         await _context.SaveChangesAsync();
     }
-
-    public int GetCount()
-    {
-        var totalItems = _context.Items.Count();
-
-        return totalItems;
-    }
 }

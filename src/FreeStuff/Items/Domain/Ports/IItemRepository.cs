@@ -15,6 +15,4 @@ public interface IItemRepository
     void Delete(Item item);
 
     Task SaveChangesAsync();
-
-    int GetCount();
 }

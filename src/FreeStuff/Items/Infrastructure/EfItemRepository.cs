@@ -20,19 +20,19 @@ public class EfItemRepository : IItemRepository
         await _context.AddAsync(item, cancellationToken);
     }
 
-    public async Task<Item?> GetAsync(ItemId id)
+    public async Task<Item?> GetAsync(ItemId id, CancellationToken cancellationToken)
     {
-        var item = await _context.Items.SingleOrDefaultAsync(i => i.Id == id);
+        var item = await _context.Items.SingleOrDefaultAsync(i => i.Id == id, cancellationToken: cancellationToken);
 
         return item;
     }
 
-    public async Task<IEnumerable<Item>?> GetAllAsync(int page, int limit)
+    public async Task<IEnumerable<Item>?> GetAllAsync(int page, int limit, CancellationToken cancellationToken)
     {
         var items = await _context.Items.OrderByDescending(item => item.CreatedDateTime)
                                   .Skip((page - 1) * limit)
                                   .Take(limit)
-                                  .ToListAsync();
+                                  .ToListAsync(cancellationToken: cancellationToken);
 
         return items;
     }
@@ -47,8 +47,8 @@ public class EfItemRepository : IItemRepository
         _context.Items.Remove(item);
     }
 
-    public async Task SaveChangesAsync()
+    public async Task SaveChangesAsync(CancellationToken cancellationToken)
     {
-        await _context.SaveChangesAsync();
+        await _context.SaveChangesAsync(cancellationToken);
     }
 }

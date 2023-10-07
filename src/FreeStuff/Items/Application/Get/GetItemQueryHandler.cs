@@ -21,9 +21,9 @@ public sealed class GetItemQueryHandler : IRequestHandler<GetItemQuery, ErrorOr<
 
     public async Task<ErrorOr<ItemDto>> Handle(GetItemQuery request, CancellationToken cancellationToken)
     {
-        var item = await _itemRepository.GetAsync(ItemId.Create(request.Id));
+        var item = await _itemRepository.GetAsync(ItemId.Create(request.Id), cancellationToken);
 
-        if (item is null) return Errors.Item.NotFoundError(request.Id);
+        if (item is null) return Errors.Item.NotFound(request.Id);
 
         var result = _mapper.Map<ItemDto>(item);
 

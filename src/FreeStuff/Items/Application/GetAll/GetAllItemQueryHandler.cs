@@ -21,7 +21,7 @@ public sealed class GetAllItemQueryHandler : IRequestHandler<GetAllItemQuery, Er
     public async Task<ErrorOr<List<ItemDto>>> Handle
         (GetAllItemQuery request, CancellationToken cancellationToken)
     {
-        var items = await _itemRepository.GetAllAsync(request.Page, request.Limit);
+        var items = await _itemRepository.GetAllAsync(request.Page, request.Limit, cancellationToken);
 
         var result = _mapper.Map<List<ItemDto>>((items ?? Array.Empty<Item>()).ToList());
 

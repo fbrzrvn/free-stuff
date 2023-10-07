@@ -29,7 +29,7 @@ public sealed class CreateItemCommandHandler : IRequestHandler<CreateItemCommand
         );
 
         await _itemRepository.CreateAsync(item, cancellationToken);
-        await _itemRepository.SaveChangesAsync();
+        await _itemRepository.SaveChangesAsync(cancellationToken);
 
         var result = _mapper.Map<ItemDto>(item);
 

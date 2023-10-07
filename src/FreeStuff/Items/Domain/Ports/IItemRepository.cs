@@ -6,13 +6,13 @@ public interface IItemRepository
 {
     Task CreateAsync(Item item, CancellationToken cancellationToken);
 
-    Task<Item?> GetAsync(ItemId id);
+    Task<Item?> GetAsync(ItemId id, CancellationToken cancellationToken);
 
-    Task<IEnumerable<Item>?> GetAllAsync(int page, int limit);
+    Task<IEnumerable<Item>?> GetAllAsync(int page, int limit, CancellationToken cancellationToken);
 
     void Update(Item item);
 
     void Delete(Item item);
 
-    Task SaveChangesAsync();
+    Task SaveChangesAsync(CancellationToken cancellationToken);
 }

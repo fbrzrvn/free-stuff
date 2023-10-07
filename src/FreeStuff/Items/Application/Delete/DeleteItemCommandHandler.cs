@@ -17,13 +17,13 @@ public sealed class DeleteItemCommandHandler : IRequestHandler<DeleteItemCommand
 
     public async Task<ErrorOr<bool>> Handle(DeleteItemCommand request, CancellationToken cancellationToken)
     {
-        var item = await _itemRepository.GetAsync(ItemId.Create(request.Id));
+        var item = await _itemRepository.GetAsync(ItemId.Create(request.Id), cancellationToken);
 
-        if (item is null) return Errors.Item.NotFoundError(request.Id);
+        if (item is null) return Errors.Item.NotFound(request.Id);
 
         _itemRepository.Delete(item);
 
-        await _itemRepository.SaveChangesAsync();
+        await _itemRepository.SaveChangesAsync(cancellationToken);
 
         return true;
     }

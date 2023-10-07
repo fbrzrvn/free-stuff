@@ -22,9 +22,9 @@ public sealed class UpdateItemCommandHandler : IRequestHandler<UpdateItemCommand
 
     public async Task<ErrorOr<ItemDto>> Handle(UpdateItemCommand request, CancellationToken cancellationToken)
     {
-        var item = await _itemRepository.GetAsync(ItemId.Create(request.Id));
+        var item = await _itemRepository.GetAsync(ItemId.Create(request.Id), cancellationToken);
 
-        if (item is null) return Errors.Item.NotFoundError(request.Id);
+        if (item is null) return Errors.Item.NotFound(request.Id);
 
         item.Update(
             request.Title,
@@ -32,7 +32,7 @@ public sealed class UpdateItemCommandHandler : IRequestHandler<UpdateItemCommand
             request.Condition.MapStringToItemCondition()
         );
         _itemRepository.Update(item);
-        await _itemRepository.SaveChangesAsync();
+        await _itemRepository.SaveChangesAsync(cancellationToken);
 
         var result = _mapper.Map<ItemDto>(item);
 

@@ -54,7 +54,7 @@ public class ItemsController : ApiController
     [HttpGet("")]
     public async Task<IActionResult> GetAll([FromQuery] GetAllItemsRequest request, CancellationToken cancellationToken)
     {
-        var query  = new GetAllItemQuery(request.Page, request.Limit);
+        var query  = new GetAllItemsQuery(request.Page, request.Limit);
         var result = await _bus.Send(query, cancellationToken);
 
         return result.Match(

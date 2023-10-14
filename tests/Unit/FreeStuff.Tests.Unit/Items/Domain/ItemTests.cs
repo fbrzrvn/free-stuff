@@ -21,7 +21,7 @@ public class ItemTests
         actual.Condition.Should().Be(Constants.Item.Condition.MapStringToItemCondition());
         actual.UserId.Should().Be(UserId.Create(Constants.Item.UserId));
         actual.CreatedDateTime.Should().BeSameDateAs(DateTime.UtcNow);
-        actual.UpdatedDateTime.Should().Be(actual.CreatedDateTime);
+        actual.UpdatedDateTime.Should().BeSameDateAs(actual.CreatedDateTime);
     }
 
     [Fact]

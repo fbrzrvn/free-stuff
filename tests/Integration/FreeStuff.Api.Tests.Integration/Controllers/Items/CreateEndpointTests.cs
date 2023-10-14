@@ -7,13 +7,13 @@ using FreeStuff.Tests.Utils.Constants;
 
 namespace FreeStuff.Api.Tests.Integration.Controllers.Items;
 
-public class CreateItemEndpointTests : IClassFixture<FreeStuffApiFactory>
+public class CreateEndpointTests : IClassFixture<FreeStuffApiFactory>
 {
     private readonly HttpClient _httpClient;
 
-    public CreateItemEndpointTests(FreeStuffApiFactory freeStuffApiFactory)
+    public CreateEndpointTests(FreeStuffApiFactory freeStuffApiFactory)
     {
-        _httpClient = freeStuffApiFactory.CreateDefaultClient();
+        _httpClient = freeStuffApiFactory.CreateClient();
     }
 
     [Fact]

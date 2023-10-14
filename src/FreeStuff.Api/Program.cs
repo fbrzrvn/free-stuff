@@ -19,8 +19,9 @@ var builder = WebApplication.CreateBuilder(args);
     builder.Services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviors<,>));
     builder.Services.AddValidatorsFromAssembly(typeof(IApplicationMarker).GetTypeInfo().Assembly);
 
+    var connectionString = builder.Configuration.GetConnectionString("Default");
     builder.Services.AddDbContext<FreeStuffDbContext>(
-        options => options.UseSqlServer(builder.Configuration.GetConnectionString("Default"))
+        options => options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString))
     );
 
     builder.Services.AddScoped<IItemRepository, EfItemRepository>();

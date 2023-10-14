@@ -1,12 +1,27 @@
-version: '3.8'
+version: '3.9'
 
 services:
-  sql-server:
-    image: mcr.microsoft.com/mssql/server:2022-latest
-    environment:
-      - HOMEBREW_NO_ENV_FILTERING=1
-      - ACCEPT_EULA=Y
-      - SA_PASSWORD=Password123!
+  mysql:
+    container_name: mysql
+    image: mysql:latest
     ports:
-      - "1433:1433"
-    container_name: sql-server-container
+      - '3306:3306'
+    expose:
+      - '3306'
+    environment:
+      MYSQL_PASSWORD: 'password'
+      MYSQL_ROOT_PASSWORD: 'password'
+    healthcheck:
+      test:
+        [
+          'CMD',
+          '/usr/bin/mysql',
+          '--user=root',
+          '--password=password',
+          '--host=localhost',
+          --execute=SHOW TABLES;,
+          'sys',
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 20

@@ -22,7 +22,7 @@ public class EfItemRepository : IItemRepository
 
     public async Task<Item?> GetAsync(ItemId id, CancellationToken cancellationToken)
     {
-        var item = await _context.Items.SingleOrDefaultAsync(i => i.Id == id, cancellationToken: cancellationToken);
+        var item = await _context.Items.SingleOrDefaultAsync(i => i.Id == id, cancellationToken);
 
         return item;
     }
@@ -32,7 +32,7 @@ public class EfItemRepository : IItemRepository
         var items = await _context.Items.OrderByDescending(item => item.CreatedDateTime)
                                   .Skip((page - 1) * limit)
                                   .Take(limit)
-                                  .ToListAsync(cancellationToken: cancellationToken);
+                                  .ToListAsync(cancellationToken);
 
         return items;
     }

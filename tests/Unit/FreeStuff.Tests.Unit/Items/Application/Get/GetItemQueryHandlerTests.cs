@@ -5,7 +5,7 @@ using FreeStuff.Items.Domain;
 using FreeStuff.Items.Domain.Ports;
 using FreeStuff.Items.Domain.ValueObjects;
 using FreeStuff.Tests.Unit.Items.TestUtils;
-using FreeStuff.Tests.Unit.TestUtils.Extensions;
+using FreeStuff.Tests.Utils.Extensions;
 using MapsterMapper;
 using NSubstitute;
 

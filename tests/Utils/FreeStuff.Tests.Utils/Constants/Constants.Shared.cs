@@ -1,4 +1,4 @@
-namespace FreeStuff.Tests.Unit.TestUtils.Constants;
+namespace FreeStuff.Tests.Utils.Constants;
 
 public static partial class Constants
 {

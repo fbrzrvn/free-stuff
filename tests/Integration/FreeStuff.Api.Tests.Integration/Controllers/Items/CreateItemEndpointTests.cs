@@ -3,6 +3,7 @@ using System.Net.Http.Json;
 using FluentAssertions;
 using FreeStuff.Contracts.Items.Requests;
 using FreeStuff.Items.Application.Shared.Dto;
+using FreeStuff.Tests.Utils.Constants;
 
 namespace FreeStuff.Api.Tests.Integration.Controllers.Items;
 
@@ -20,10 +21,10 @@ public class CreateItemEndpointTests : IClassFixture<FreeStuffApiFactory>
     {
         // Arrange
         var createItemRequest = new CreateItemRequest(
-            "item-title",
-            "item-description",
-            "New",
-            Guid.NewGuid()
+            Constants.Item.Title,
+            Constants.Item.Description,
+            Constants.Item.Condition,
+            Constants.Item.UserId
         );
 
         // Act
@@ -46,10 +47,10 @@ public class CreateItemEndpointTests : IClassFixture<FreeStuffApiFactory>
     {
         // Arrange
         var createItemRequest = new CreateItemRequest(
-            "item-title",
-            "item-description",
+            Constants.Item.Title,
+            Constants.Item.Description,
             "Old but Gold",
-            Guid.NewGuid()
+            Constants.Item.UserId
         );
 
         // Act

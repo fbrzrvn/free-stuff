@@ -4,7 +4,7 @@ using FreeStuff.Items.Application.Shared.Dto;
 using FreeStuff.Items.Domain;
 using FreeStuff.Items.Domain.Ports;
 using FreeStuff.Tests.Unit.Items.TestUtils;
-using FreeStuff.Tests.Unit.TestUtils.Constants;
+using FreeStuff.Tests.Utils.Constants;
 using MapsterMapper;
 using NSubstitute;
 

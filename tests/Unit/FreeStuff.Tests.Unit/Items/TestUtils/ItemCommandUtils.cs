@@ -1,6 +1,6 @@
 using FreeStuff.Items.Application.Create;
 using FreeStuff.Items.Application.Update;
-using FreeStuff.Tests.Unit.TestUtils.Constants;
+using FreeStuff.Tests.Utils.Constants;
 
 namespace FreeStuff.Tests.Unit.Items.TestUtils;
 

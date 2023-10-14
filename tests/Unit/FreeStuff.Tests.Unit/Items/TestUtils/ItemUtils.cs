@@ -1,7 +1,7 @@
 using FreeStuff.Items.Application.Shared.Dto;
 using FreeStuff.Items.Application.Shared.Mapping;
 using FreeStuff.Items.Domain;
-using FreeStuff.Tests.Unit.TestUtils.Constants;
+using FreeStuff.Tests.Utils.Constants;
 
 namespace FreeStuff.Tests.Unit.Items.TestUtils;
 

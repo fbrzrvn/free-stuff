@@ -1,7 +1,7 @@
 using ErrorOr;
 using FluentAssertions;
 
-namespace FreeStuff.Tests.Unit.TestUtils.Extensions;
+namespace FreeStuff.Tests.Utils.Extensions;
 
 public static partial class Extensions
 {

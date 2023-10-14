@@ -27,6 +27,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\..\..\src\FreeStuff.Api\FreeStuff.Api.csproj"/>
+        <ProjectReference Include="..\..\Utils\FreeStuff.Tests.Utils\FreeStuff.Tests.Utils.csproj"/>
     </ItemGroup>
 
 </Project>

@@ -3,7 +3,7 @@ using FreeStuff.Items.Application.Delete;
 using FreeStuff.Items.Domain.Ports;
 using FreeStuff.Items.Domain.ValueObjects;
 using FreeStuff.Tests.Unit.Items.TestUtils;
-using FreeStuff.Tests.Unit.TestUtils.Extensions;
+using FreeStuff.Tests.Utils.Extensions;
 using NSubstitute;
 
 namespace FreeStuff.Tests.Unit.Items.Application.Delete;

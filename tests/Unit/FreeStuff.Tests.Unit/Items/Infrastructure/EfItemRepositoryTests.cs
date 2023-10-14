@@ -5,7 +5,7 @@ using FreeStuff.Items.Domain.Ports;
 using FreeStuff.Items.Infrastructure;
 using FreeStuff.Shared.Infrastructure;
 using FreeStuff.Tests.Unit.Items.TestUtils;
-using FreeStuff.Tests.Unit.TestUtils.Constants;
+using FreeStuff.Tests.Utils.Constants;
 using Microsoft.EntityFrameworkCore;
 
 namespace FreeStuff.Tests.Unit.Items.Infrastructure;

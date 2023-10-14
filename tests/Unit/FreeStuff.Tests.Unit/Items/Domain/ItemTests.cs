@@ -1,7 +1,7 @@
 using FluentAssertions;
 using FreeStuff.Items.Application.Shared.Mapping;
 using FreeStuff.Tests.Unit.Items.TestUtils;
-using FreeStuff.Tests.Unit.TestUtils.Constants;
+using FreeStuff.Tests.Utils.Constants;
 using FreeStuff.User.Domain.ValueObjects;
 
 namespace FreeStuff.Tests.Unit.Items.Domain;

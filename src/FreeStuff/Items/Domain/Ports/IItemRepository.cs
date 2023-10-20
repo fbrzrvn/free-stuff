@@ -11,8 +11,7 @@ public interface IItemRepository
 
     Task<IEnumerable<Item>?> GetAllAsync(int page, int limit, CancellationToken cancellationToken);
 
-    Task<IEnumerable<Item>?> SearchAsync
-    (
+    Task<IEnumerable<Item>?> SearchAsync(
         string?           title,
         ItemCondition?    condition,
         string?           sortBy,
@@ -24,4 +23,6 @@ public interface IItemRepository
     void Delete(Item item);
 
     Task SaveChangesAsync(CancellationToken cancellationToken);
+
+    int CountItems();
 }

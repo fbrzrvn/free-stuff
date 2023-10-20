@@ -59,9 +59,7 @@ public class ItemsController : ApiController
         var result = await _bus.Send(query, cancellationToken);
 
         return result.Match(
-            // items.Count must be come from the handler to have the real total count of items in db.
-            // at the moment is just the total of the result send by the handler
-            items => Ok(_mapper.Map<ItemsResponse>((items, request, items.Count))),
+            items => Ok(_mapper.Map<ItemsResponse>((items, request))),
             errors => Problem(errors)
         );
     }

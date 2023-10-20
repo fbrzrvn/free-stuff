@@ -4,4 +4,4 @@ using MediatR;
 
 namespace FreeStuff.Items.Application.GetAll;
 
-public record GetAllItemsQuery(int Page, int Limit) : IRequest<ErrorOr<List<ItemDto>>>;
+public record GetAllItemsQuery(int Page, int Limit) : IRequest<ErrorOr<ItemsDto>>;

@@ -7,7 +7,7 @@ using MediatR;
 
 namespace FreeStuff.Items.Application.GetAll;
 
-public sealed class GetAllItemsQueryHandler : IRequestHandler<GetAllItemsQuery, ErrorOr<List<ItemDto>>>
+public sealed class GetAllItemsQueryHandler : IRequestHandler<GetAllItemsQuery, ErrorOr<ItemsDto>>
 {
     private readonly IItemRepository _itemRepository;
     private readonly IMapper         _mapper;
@@ -18,16 +18,18 @@ public sealed class GetAllItemsQueryHandler : IRequestHandler<GetAllItemsQuery, 
         _mapper         = mapper;
     }
 
-    public async Task<ErrorOr<List<ItemDto>>> Handle
-        (GetAllItemsQuery request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<ItemsDto>> Handle(GetAllItemsQuery request, CancellationToken cancellationToken)
     {
         var items = await _itemRepository.GetAllAsync(
-            request.Page,
-            request.Limit,
-            cancellationToken
-        );
+                        request.Page,
+                        request.Limit,
+                        cancellationToken
+                    ) ??
+                    new List<Item>();
 
-        var result = _mapper.Map<List<ItemDto>>((items ?? Array.Empty<Item>()).ToList());
+        var totalItems = _itemRepository.CountItems();
+
+        var result = new ItemsDto(_mapper.Map<List<ItemDto>>(items), totalItems);
 
         return result;
     }

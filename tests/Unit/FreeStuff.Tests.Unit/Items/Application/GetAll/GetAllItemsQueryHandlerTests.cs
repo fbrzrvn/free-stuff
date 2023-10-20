@@ -44,7 +44,7 @@ public class GetAllItemsQueryHandlerTests
 
         // Assert
         actual.IsError.Should().BeFalse();
-        actual.Value.Should().BeNullOrEmpty();
+        actual.Value.Data.Should().BeNullOrEmpty();
 
         await _itemRepository.Received(1)
                              .GetAllAsync(

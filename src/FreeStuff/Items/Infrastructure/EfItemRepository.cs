@@ -81,4 +81,9 @@ public class EfItemRepository : IItemRepository
     {
         await _context.SaveChangesAsync(cancellationToken);
     }
+
+    public int CountItems()
+    {
+        return _context.Items.Count();
+    }
 }

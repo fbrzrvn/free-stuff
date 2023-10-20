@@ -10,11 +10,11 @@ public class ItemMapping : IRegister
 {
     public void Register(TypeAdapterConfig config)
     {
-        config.NewConfig<(List<ItemDto> Items, GetAllItemsRequest Request, int TotalResults), ItemsResponse>()
-              .Map(dest => dest.Data, src => src.Items)
+        config.NewConfig<(ItemsDto ItemsDto, GetAllItemsRequest Request), ItemsResponse>()
+              .Map(dest => dest.Data, src => src.ItemsDto.Data)
               .Map(dest => dest.Page, src => src.Request.Page)
               .Map(dest => dest.Limit, src => src.Request.Limit)
-              .Map(dest => dest.TotalResults, src => src.TotalResults);
+              .Map(dest => dest.TotalResults, src => src.ItemsDto.TotalResult);
 
         config.NewConfig<(List<ItemDto> Items, SearchItemsRequest Request, int TotalResults), ItemsResponse>()
               .Map(dest => dest.Data, src => src.Items)

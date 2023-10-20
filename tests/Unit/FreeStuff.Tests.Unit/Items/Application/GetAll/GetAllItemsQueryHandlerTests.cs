@@ -87,7 +87,7 @@ public class GetAllItemsQueryHandlerTests
 
         // Assert
         actual.IsError.Should().BeFalse();
-        actual.Value.Should().BeEquivalentTo(expectedItemDtos);
+        actual.Value.Data.Should().BeEquivalentTo(expectedItemDtos);
 
         await _itemRepository.Received(1)
                              .GetAllAsync(

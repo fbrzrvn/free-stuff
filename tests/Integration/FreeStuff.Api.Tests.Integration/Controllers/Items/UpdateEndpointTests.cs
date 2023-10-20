@@ -96,8 +96,7 @@ public class UpdateEndpointTests : IClassFixture<FreeStuffApiFactory>
         var response = await _httpClient.PutAsJsonAsync(
             $"items/{Guid.NewGuid()}",
             updateItemRequest,
-            CancellationToken
-                .None
+            CancellationToken.None
         );
 
         // Assert

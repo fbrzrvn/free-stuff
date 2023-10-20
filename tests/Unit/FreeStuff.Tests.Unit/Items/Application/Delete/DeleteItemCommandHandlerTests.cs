@@ -37,7 +37,7 @@ public class DeleteItemCommandHandlerTests
         actual.Value.Should().BeTrue();
 
         _itemRepository.Received(1).Delete(item);
-        await _itemRepository.Received(1).SaveChangesAsync(Arg.Any<CancellationToken>());
+        await _itemRepository.Received(1).SaveChangesAsync(CancellationToken.None);
     }
 
     [Fact]
@@ -54,6 +54,6 @@ public class DeleteItemCommandHandlerTests
         actual.ValidateNotFoundError(item.Id.Value);
 
         _itemRepository.Received(0).Delete(item);
-        await _itemRepository.Received(0).SaveChangesAsync(Arg.Any<CancellationToken>());
+        await _itemRepository.Received(0).SaveChangesAsync(CancellationToken.None);
     }
 }

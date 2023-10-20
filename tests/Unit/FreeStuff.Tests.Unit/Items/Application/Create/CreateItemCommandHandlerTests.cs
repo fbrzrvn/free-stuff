@@ -26,7 +26,7 @@ public class CreateItemCommandHandlerTests
         // Arrange
         var createItemCommand = ItemCommandUtils.NewCreateItemCommand();
 
-        _itemRepository.CreateAsync(Arg.Any<Item>(), CancellationToken.None)
+        _itemRepository.CreateAsync(Arg.Any<Item>(), Arg.Any<CancellationToken>())
                        .ReturnsForAnyArgs(Task.FromResult(ItemUtils.CreateItem()));
 
         _mapper.Map<ItemDto>(Arg.Any<Item>())

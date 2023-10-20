@@ -35,11 +35,11 @@ public class CreateEndpointTests : IClassFixture<FreeStuffApiFactory>
         );
 
         // Assert
-        var itemResponse = await response.Content.ReadFromJsonAsync<ItemDto>();
+        var actual = await response.Content.ReadFromJsonAsync<ItemDto>();
 
-        itemResponse.Should().NotBeNull().And.BeEquivalentTo(createItemRequest);
         response.StatusCode.Should().Be(HttpStatusCode.Created);
-        response.Headers.Location.Should().Be($"http://localhost/items/{itemResponse!.Id}");
+        response.Headers.Location.Should().Be($"http://localhost/items/{actual!.Id}");
+        actual.Should().NotBeNull().And.BeEquivalentTo(createItemRequest);
     }
 
     [Fact]

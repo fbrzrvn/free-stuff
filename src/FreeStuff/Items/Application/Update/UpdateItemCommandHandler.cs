@@ -24,13 +24,17 @@ public sealed class UpdateItemCommandHandler : IRequestHandler<UpdateItemCommand
     {
         var item = await _itemRepository.GetAsync(ItemId.Create(request.Id), cancellationToken);
 
-        if (item is null) return Errors.Item.NotFound(request.Id);
+        if (item is null)
+        {
+            return Errors.Item.NotFound(request.Id);
+        }
 
         item.Update(
             request.Title,
             request.Description,
-            request.Condition.MapStringToItemCondition()
+            request.Condition.MapExactStringToItemCondition()
         );
+
         _itemRepository.Update(item);
         await _itemRepository.SaveChangesAsync(cancellationToken);
 

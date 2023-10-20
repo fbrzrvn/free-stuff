@@ -34,7 +34,7 @@ public class UpdateItemCommandHandlerTests
         item.Update(
             Constants.Item.EditedTitle,
             Constants.Item.EditedDescription,
-            Constants.Item.EditedCondition.MapStringToItemCondition()
+            Constants.Item.EditedCondition.MapExactStringToItemCondition()
         );
 
         var expected = item.MapItemToDto();
@@ -74,6 +74,6 @@ public class UpdateItemCommandHandlerTests
         // Assert
         actual.ValidateNotFoundError(updateItemCommand.Id);
 
-        await _itemRepository.Received(1).GetAsync(Arg.Any<ItemId>(), Arg.Any<CancellationToken>());
+        await _itemRepository.Received(1).GetAsync(Arg.Any<ItemId>(), CancellationToken.None);
     }
 }

@@ -30,7 +30,7 @@ public class GetItemQueryHandlerTests
         var item         = ItemUtils.CreateItem();
         var expected     = item.MapItemToDto();
 
-        _itemRepository.GetAsync(Arg.Any<ItemId>(), CancellationToken.None)!
+        _itemRepository.GetAsync(Arg.Any<ItemId>(), Arg.Any<CancellationToken>())!
                        .ReturnsForAnyArgs(Task.FromResult(item));
 
         _mapper.Map<ItemDto>(Arg.Any<Item>())
@@ -53,7 +53,7 @@ public class GetItemQueryHandlerTests
         var item         = ItemUtils.CreateItem();
         var getItemQuery = new GetItemQuery(Guid.Parse(item.Id.Value.ToString()));
 
-        _itemRepository.GetAsync(Arg.Any<ItemId>(), CancellationToken.None)
+        _itemRepository.GetAsync(Arg.Any<ItemId>(), Arg.Any<CancellationToken>())
                        .Returns((Item)null!);
 
         _mapper.Map<ItemDto>(Arg.Any<Item>())

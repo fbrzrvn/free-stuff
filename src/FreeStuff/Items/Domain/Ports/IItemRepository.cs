@@ -1,3 +1,4 @@
+using FreeStuff.Items.Domain.Enum;
 using FreeStuff.Items.Domain.ValueObjects;
 
 namespace FreeStuff.Items.Domain.Ports;
@@ -9,6 +10,14 @@ public interface IItemRepository
     Task<Item?> GetAsync(ItemId id, CancellationToken cancellationToken);
 
     Task<IEnumerable<Item>?> GetAllAsync(int page, int limit, CancellationToken cancellationToken);
+
+    Task<IEnumerable<Item>?> SearchAsync
+    (
+        string?           title,
+        ItemCondition?    condition,
+        string?           sortBy,
+        CancellationToken cancellationToken
+    );
 
     void Update(Item item);
 

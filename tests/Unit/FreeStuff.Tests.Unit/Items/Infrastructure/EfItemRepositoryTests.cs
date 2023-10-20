@@ -36,7 +36,7 @@ public class EfItemRepositoryTests : IDisposable
         actual.Id.Should().NotBeNull();
         actual.Title.Should().Be(Constants.Item.Title);
         actual.Description.Should().Be(Constants.Item.Description);
-        actual.Condition.Should().Be(Constants.Item.Condition.MapStringToItemCondition());
+        actual.Condition.Should().Be(Constants.Item.Condition.MapExactStringToItemCondition());
         actual.UserId.Value.Should().Be(Constants.Item.UserId);
         actual.CreatedDateTime.Should().BeSameDateAs(DateTime.UtcNow);
         actual.UpdatedDateTime.Should().Be(actual.CreatedDateTime);
@@ -89,6 +89,41 @@ public class EfItemRepositoryTests : IDisposable
     }
 
     [Fact]
+    public async Task SearchAsync_ShouldReturnEmptyItemsList_WhenTableHasNoRecords()
+    {
+        // Act
+        var actual = await _itemRepository.SearchAsync(
+            string.Empty,
+            Constants.Item.Condition.MapExactStringToItemCondition(),
+            string.Empty,
+            CancellationToken.None
+        );
+
+        // Assert
+        actual.Should().BeEquivalentTo(Enumerable.Empty<Item>());
+    }
+
+    [Fact]
+    public async Task SearchAsync_ShouldReturnItems_WhenTableHasRecords()
+    {
+        // Arrange
+        var item = await CreateItemInContext();
+
+        // Act
+        var itemsEnumerable = await _itemRepository.SearchAsync(
+            "item",
+            item.Condition,
+            string.Empty,
+            CancellationToken.None
+        );
+
+        // Assert
+        var actual = itemsEnumerable!.ToArray();
+        actual.Should().ContainSingle();
+        actual.Should().Contain(item);
+    }
+
+    [Fact]
     public async Task Update_ShouldUpdateItem_WhenExistsAndInputIsValid()
     {
         // Arrange
@@ -97,7 +132,7 @@ public class EfItemRepositoryTests : IDisposable
         item.Update(
             Constants.Item.EditedTitle,
             Constants.Item.EditedDescription,
-            Constants.Item.EditedCondition.MapStringToItemCondition()
+            Constants.Item.EditedCondition.MapExactStringToItemCondition()
         );
 
         // Act
@@ -110,7 +145,7 @@ public class EfItemRepositoryTests : IDisposable
         actual.Should().BeEquivalentTo(item);
         actual.Title.Should().Be(Constants.Item.EditedTitle);
         actual.Description.Should().Be(Constants.Item.EditedDescription);
-        actual.Condition.Should().Be(Constants.Item.EditedCondition.MapStringToItemCondition());
+        actual.Condition.Should().Be(Constants.Item.EditedCondition.MapExactStringToItemCondition());
         actual.UpdatedDateTime.Should().NotBe(actual.CreatedDateTime);
         actual.UpdatedDateTime.Should().BeSameDateAs(DateTime.UtcNow);
     }

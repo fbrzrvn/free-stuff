@@ -12,7 +12,19 @@ public static class ItemUtils
         var item = Item.Create(
             Constants.Item.Title,
             Constants.Item.Description,
-            Constants.Item.Condition.MapStringToItemCondition(),
+            Constants.Item.Condition.MapExactStringToItemCondition(),
+            Constants.Item.UserId
+        );
+
+        return item;
+    }
+
+    public static Item CreateItem(string title, string description, string condition)
+    {
+        var item = Item.Create(
+            title,
+            description,
+            condition.MapExactStringToItemCondition(),
             Constants.Item.UserId
         );
 

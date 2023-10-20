@@ -20,7 +20,7 @@ public class ItemConditionMappingTests
     )
     {
         // Act
-        var actual = conditionString.MapStringToItemCondition();
+        var actual = conditionString.MapExactStringToItemCondition();
 
         // Assert
         actual.Should().Be(expected);
@@ -33,7 +33,7 @@ public class ItemConditionMappingTests
         const string invalidConditionString = "Old but gold";
 
         // Act
-        var actual = () => invalidConditionString.MapStringToItemCondition();
+        var actual = () => invalidConditionString.MapExactStringToItemCondition();
 
         // Assert
         actual.Should().Throw<ValidationException>().WithMessage($"Invalid item condition: {invalidConditionString}");

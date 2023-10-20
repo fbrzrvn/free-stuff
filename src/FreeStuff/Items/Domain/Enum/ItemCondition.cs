@@ -6,5 +6,6 @@ public enum ItemCondition
     AsGoodAsNew,
     GoodCondition,
     FairCondition,
-    HasGivenItAll
+    HasGivenItAll,
+    None
 }

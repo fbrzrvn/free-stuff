@@ -1,4 +1,5 @@
 using FreeStuff.Items.Domain;
+using FreeStuff.Items.Domain.Enum;
 using FreeStuff.Items.Domain.Ports;
 using FreeStuff.Items.Domain.ValueObjects;
 using FreeStuff.Shared.Infrastructure;
@@ -35,6 +36,35 @@ public class EfItemRepository : IItemRepository
                                   .ToListAsync(cancellationToken);
 
         return items;
+    }
+
+    public async Task<IEnumerable<Item>?> SearchAsync(
+        string?           title,
+        ItemCondition?    condition,
+        string?           sortBy,
+        CancellationToken cancellationToken
+    )
+    {
+        var query = _context.Items.AsQueryable();
+
+        if (!string.IsNullOrEmpty(title))
+        {
+            query = _context.Items.Where(item => item.Title.ToLower().Contains(title.ToLower()));
+        }
+
+        if (condition != ItemCondition.None)
+        {
+            query = query.Where(item => item.Condition == condition);
+        }
+
+        query = sortBy switch
+        {
+            "asc"  => query.OrderBy(item => item.Title),
+            "desc" => query.OrderByDescending(item => item.Title),
+            _      => query
+        };
+
+        return await query.ToListAsync(cancellationToken);
     }
 
     public void Update(Item item)

@@ -16,6 +16,12 @@ public class ItemMapping : IRegister
               .Map(dest => dest.Limit, src => src.Request.Limit)
               .Map(dest => dest.TotalResults, src => src.TotalResults);
 
+        config.NewConfig<(List<ItemDto> Items, SearchItemsRequest Request, int TotalResults), ItemsResponse>()
+              .Map(dest => dest.Data, src => src.Items)
+              .Map(dest => dest.Page, src => src.Request.Page)
+              .Map(dest => dest.Limit, src => src.Request.Limit)
+              .Map(dest => dest.TotalResults, src => src.TotalResults);
+
         config.NewConfig<(Guid Id, UpdateItemRequest Request), UpdateItemCommand>()
               .Map(dest => dest.Id, src => src.Id)
               .Map(dest => dest, src => src.Request);

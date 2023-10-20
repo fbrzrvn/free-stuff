@@ -1,10 +1,12 @@
+using FreeStuff.Items.Domain;
+using FreeStuff.Items.Domain.Enum;
 using FreeStuff.Shared.Infrastructure;
+using FreeStuff.Tests.Utils.Constants;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Testcontainers.MySql;
 
 namespace FreeStuff.Api.Tests.Integration;
@@ -23,7 +25,14 @@ public class FreeStuffApiFactory : WebApplicationFactory<IApiMarker>, IAsyncLife
         builder.ConfigureTestServices(
             services =>
             {
-                services.RemoveAll(typeof(DbContextOptions<FreeStuffDbContext>));
+                var descriptor = services.SingleOrDefault(
+                    d => d.ServiceType == typeof(DbContextOptions<FreeStuffDbContext>)
+                );
+
+                if (descriptor != null)
+                {
+                    services.Remove(descriptor);
+                }
 
                 var connectionString = _dbContainer.GetConnectionString();
                 services.AddDbContext<FreeStuffDbContext>(
@@ -36,7 +45,7 @@ public class FreeStuffApiFactory : WebApplicationFactory<IApiMarker>, IAsyncLife
     public async Task InitializeAsync()
     {
         await _dbContainer.StartAsync();
-        EnsureDatabaseCreated();
+        await EnsureDatabaseCreated();
     }
 
     public new async Task DisposeAsync()
@@ -44,10 +53,49 @@ public class FreeStuffApiFactory : WebApplicationFactory<IApiMarker>, IAsyncLife
         await _dbContainer.DisposeAsync();
     }
 
-    private void EnsureDatabaseCreated()
+    private async Task EnsureDatabaseCreated()
     {
         using var scope     = Services.CreateScope();
         var       dbContext = scope.ServiceProvider.GetRequiredService<FreeStuffDbContext>();
-        dbContext.Database.EnsureCreated();
+
+        await dbContext.Database.EnsureCreatedAsync();
+        await SeedData(dbContext);
+    }
+
+    private static async Task SeedData(FreeStuffDbContext context)
+    {
+        if (context.Items.Any())
+        {
+            return;
+        }
+
+        context.Items.AddRange(
+            Item.Create(
+                "item A",
+                Constants.Item.Description,
+                ItemCondition.New,
+                Constants.Item.UserId
+            ),
+            Item.Create(
+                "item B",
+                Constants.Item.Description,
+                ItemCondition.HasGivenItAll,
+                Constants.Item.UserId
+            ),
+            Item.Create(
+                "item C",
+                Constants.Item.Description,
+                ItemCondition.GoodCondition,
+                Constants.Item.UserId
+            ),
+            Item.Create(
+                "item D",
+                Constants.Item.Description,
+                ItemCondition.FairCondition,
+                Constants.Item.UserId
+            )
+        );
+
+        await context.SaveChangesAsync();
     }
 }

@@ -24,7 +24,7 @@ public sealed class CreateItemCommandHandler : IRequestHandler<CreateItemCommand
         var item = Item.Create(
             request.Title,
             request.Description,
-            request.Condition.MapStringToItemCondition(),
+            request.Condition.MapExactStringToItemCondition(),
             request.UserId
         );
 

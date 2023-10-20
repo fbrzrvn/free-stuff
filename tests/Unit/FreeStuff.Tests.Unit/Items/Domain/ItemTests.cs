@@ -18,7 +18,7 @@ public class ItemTests
         actual.Should().NotBeNull();
         actual.Title.Should().Be(Constants.Item.Title);
         actual.Description.Should().Be(Constants.Item.Description);
-        actual.Condition.Should().Be(Constants.Item.Condition.MapStringToItemCondition());
+        actual.Condition.Should().Be(Constants.Item.Condition.MapExactStringToItemCondition());
         actual.UserId.Should().Be(UserId.Create(Constants.Item.UserId));
         actual.CreatedDateTime.Should().BeSameDateAs(DateTime.UtcNow);
         actual.UpdatedDateTime.Should().BeSameDateAs(actual.CreatedDateTime);
@@ -34,13 +34,13 @@ public class ItemTests
         actual.Update(
             Constants.Item.EditedTitle,
             Constants.Item.EditedDescription,
-            Constants.Item.EditedCondition.MapStringToItemCondition()
+            Constants.Item.EditedCondition.MapExactStringToItemCondition()
         );
 
         // Assert
         actual.Title.Should().Be(Constants.Item.EditedTitle);
         actual.Description.Should().Be(Constants.Item.EditedDescription);
-        actual.Condition.Should().Be(Constants.Item.EditedCondition.MapStringToItemCondition());
+        actual.Condition.Should().Be(Constants.Item.EditedCondition.MapExactStringToItemCondition());
         actual.UpdatedDateTime.Should().NotBe(actual.CreatedDateTime);
         actual.UpdatedDateTime.Should().BeSameDateAs(DateTime.UtcNow);
     }

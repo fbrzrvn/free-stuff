@@ -6,8 +6,8 @@ namespace FreeStuff.Categories.Domain;
 
 public class Category : Entity<CategoryId>
 {
-    public string     Name       { get; private set; }
-    public List<Item> Items      { get; private set; }
+    public string     Name  { get; private set; }
+    public List<Item> Items { get; private set; }
 
     public Category(CategoryId id, string name) : base(id)
     {
@@ -25,5 +25,10 @@ public class Category : Entity<CategoryId>
     public void AddItem(Item item)
     {
         Items.Add(item);
+    }
+
+    public void Update(string newName)
+    {
+        Name = newName;
     }
 }

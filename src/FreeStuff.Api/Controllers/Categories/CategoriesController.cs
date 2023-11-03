@@ -1,5 +1,7 @@
 using FreeStuff.Categories.Application.Create;
+using FreeStuff.Categories.Application.Delete;
 using FreeStuff.Categories.Application.GetAll;
+using FreeStuff.Categories.Application.Update;
 using FreeStuff.Contracts.Categories.Requests;
 using FreeStuff.Contracts.Categories.Responses;
 using MapsterMapper;
@@ -44,6 +46,22 @@ public class CategoriesController : ApiController
 
         return result.Match(
             categories => Ok(_mapper.Map<List<CategoryResponse>>(categories)),
+            errors => Problem(errors)
+        );
+    }
+
+    [HttpPut("")]
+    public async Task<IActionResult> Update(
+        [FromBody]
+        UpdateCategoryRequest request,
+        CancellationToken cancellationToken
+    )
+    {
+        var command = _mapper.Map<UpdateCategoryCommand>(request);
+        var result  = await _bus.Send(command, cancellationToken);
+
+        return result.Match(
+            category => Ok(_mapper.Map<CategoryResponse>(category)),
             errors => Problem(errors)
         );
     }

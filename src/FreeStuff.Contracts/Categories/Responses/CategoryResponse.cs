@@ -2,14 +2,12 @@ namespace FreeStuff.Contracts.Categories.Responses;
 
 public class CategoryResponse
 {
-    public Guid       Id      { get; }
-    public string     Name    { get; }
-    public List<Guid> ItemIds { get; }
+    public Guid   Id   { get; }
+    public string Name { get; }
 
-    public CategoryResponse(Guid id, string name, List<Guid> itemIds)
+    public CategoryResponse(Guid id, string name)
     {
-        Id      = id;
-        Name    = name;
-        ItemIds = itemIds;
+        Id   = id;
+        Name = name;
     }
 }

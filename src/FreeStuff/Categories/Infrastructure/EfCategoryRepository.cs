@@ -31,7 +31,8 @@ public class EfCategoryRepository : ICategoryRepository
 
     public async Task<IEnumerable<Category>?> GetAllAsync(CancellationToken cancellationToken)
     {
-        var categories = await _context.Categories.OrderByDescending(category => category.Name)
+        var categories = await _context.Categories
+                                       .OrderByDescending(category => category.Name)
                                        .ToListAsync(cancellationToken);
 
         return categories;

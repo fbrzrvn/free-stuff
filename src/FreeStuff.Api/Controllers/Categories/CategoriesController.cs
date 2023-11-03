@@ -1,5 +1,4 @@
 using FreeStuff.Categories.Application.Create;
-using FreeStuff.Categories.Application.Delete;
 using FreeStuff.Categories.Application.GetAll;
 using FreeStuff.Categories.Application.Update;
 using FreeStuff.Contracts.Categories.Requests;
@@ -24,8 +23,7 @@ public class CategoriesController : ApiController
 
     [HttpPost("")]
     public async Task<IActionResult> Create(
-        [FromBody]
-        CreateCategoryRequest request,
+        [FromBody] CreateCategoryRequest request,
         CancellationToken cancellationToken
     )
     {
@@ -52,8 +50,7 @@ public class CategoriesController : ApiController
 
     [HttpPut("")]
     public async Task<IActionResult> Update(
-        [FromBody]
-        UpdateCategoryRequest request,
+        [FromBody] UpdateCategoryRequest request,
         CancellationToken cancellationToken
     )
     {

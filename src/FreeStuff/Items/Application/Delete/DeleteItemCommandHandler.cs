@@ -19,7 +19,10 @@ public sealed class DeleteItemCommandHandler : IRequestHandler<DeleteItemCommand
     {
         var item = await _itemRepository.GetAsync(ItemId.Create(request.Id), cancellationToken);
 
-        if (item is null) return Errors.Item.NotFound(request.Id);
+        if (item is null)
+        {
+            return Errors.Item.NotFound(request.Id);
+        }
 
         _itemRepository.Delete(item);
 

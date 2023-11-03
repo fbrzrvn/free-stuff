@@ -1,6 +1,8 @@
 using System.Reflection;
 using FluentValidation;
 using FreeStuff;
+using FreeStuff.Categories.Domain.Ports;
+using FreeStuff.Categories.Infrastructure;
 using FreeStuff.Items.Domain.Ports;
 using FreeStuff.Items.Infrastructure;
 using FreeStuff.Shared.Application.Behaviors;
@@ -25,6 +27,7 @@ var builder = WebApplication.CreateBuilder(args);
     );
 
     builder.Services.AddScoped<IItemRepository, EfItemRepository>();
+    builder.Services.AddScoped<ICategoryRepository, EfCategoryRepository>();
 
     var config = TypeAdapterConfig.GlobalSettings;
     config.Scan(typeof(Program).Assembly, typeof(IApplicationMarker).Assembly);

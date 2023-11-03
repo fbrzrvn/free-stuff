@@ -28,6 +28,7 @@ public sealed class SearchItemsQueryHandler : IRequestHandler<SearchItemsQuery, 
 
         var items = await _itemRepository.SearchAsync(
             request.Title,
+            request.CategoryName,
             itemCondition,
             request.SortBy,
             cancellationToken

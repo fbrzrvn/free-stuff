@@ -13,6 +13,7 @@ public interface IItemRepository
 
     Task<IEnumerable<Item>?> SearchAsync(
         string?           title,
+        string?           categoryName,
         ItemCondition?    condition,
         string?           sortBy,
         CancellationToken cancellationToken

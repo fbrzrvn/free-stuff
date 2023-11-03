@@ -14,6 +14,7 @@ public class UpdateEndpointTests : IClassFixture<FreeStuffApiFactory>
     private readonly CreateItemRequest _createItemRequest = new(
         Constants.Item.Title,
         Constants.Item.Description,
+        Constants.Item.CategoryName,
         Constants.Item.Condition,
         Constants.Item.UserId
     );

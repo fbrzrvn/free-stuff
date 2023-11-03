@@ -1,3 +1,4 @@
+using FreeStuff.Categories.Domain;
 using FreeStuff.Items.Domain;
 using FreeStuff.Items.Domain.Enum;
 using FreeStuff.Shared.Infrastructure;
@@ -64,38 +65,53 @@ public class FreeStuffApiFactory : WebApplicationFactory<IApiMarker>, IAsyncLife
 
     private static async Task SeedData(FreeStuffDbContext context)
     {
-        if (context.Items.Any())
+        await using var transaction = await context.Database.BeginTransactionAsync();
+
+        try
         {
-            return;
+            var category = Category.Create("Other");
+
+            if (!context.Items.Any())
+            {
+                context.Items.AddRange(
+                    Item.Create(
+                        "item A",
+                        Constants.Item.Description,
+                        category,
+                        ItemCondition.New,
+                        Constants.Item.UserId
+                    ),
+                    Item.Create(
+                        "item B",
+                        Constants.Item.Description,
+                        category,
+                        ItemCondition.HasGivenItAll,
+                        Constants.Item.UserId
+                    ),
+                    Item.Create(
+                        "item C",
+                        Constants.Item.Description,
+                        category,
+                        ItemCondition.GoodCondition,
+                        Constants.Item.UserId
+                    ),
+                    Item.Create(
+                        "item D",
+                        Constants.Item.Description,
+                        category,
+                        ItemCondition.FairCondition,
+                        Constants.Item.UserId
+                    )
+                );
+            }
+
+            await context.SaveChangesAsync();
+            await transaction.CommitAsync();
         }
-
-        context.Items.AddRange(
-            Item.Create(
-                "item A",
-                Constants.Item.Description,
-                ItemCondition.New,
-                Constants.Item.UserId
-            ),
-            Item.Create(
-                "item B",
-                Constants.Item.Description,
-                ItemCondition.HasGivenItAll,
-                Constants.Item.UserId
-            ),
-            Item.Create(
-                "item C",
-                Constants.Item.Description,
-                ItemCondition.GoodCondition,
-                Constants.Item.UserId
-            ),
-            Item.Create(
-                "item D",
-                Constants.Item.Description,
-                ItemCondition.FairCondition,
-                Constants.Item.UserId
-            )
-        );
-
-        await context.SaveChangesAsync();
+        catch (Exception)
+        {
+            await transaction.RollbackAsync();
+            throw;
+        }
     }
 }

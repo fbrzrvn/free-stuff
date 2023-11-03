@@ -69,6 +69,7 @@ public class ItemsController : ApiController
     {
         var query = new SearchItemsQuery(
             request.Title,
+            request.CategoryName,
             request.Condition,
             request.SortBy
         );

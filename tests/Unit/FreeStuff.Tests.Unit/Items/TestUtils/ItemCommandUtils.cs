@@ -11,6 +11,7 @@ public static class ItemCommandUtils
         var command = new CreateItemCommand(
             Constants.Item.Title,
             Constants.Item.Description,
+            Constants.Item.CategoryName,
             Constants.Item.Condition,
             Constants.Item.UserId
         );
@@ -18,19 +19,20 @@ public static class ItemCommandUtils
         return command;
     }
 
-    public static CreateItemCommand NewCreateItemCommand
-    (
+    public static CreateItemCommand NewCreateItemCommand(
         string? title,
         string? description,
+        string? categoryName,
         string? condition,
         Guid?   userId
     )
     {
         var command = new CreateItemCommand(
-            title       ?? Constants.Item.Title,
-            description ?? Constants.Item.Description,
-            condition   ?? Constants.Item.Condition,
-            userId      ?? Constants.Item.UserId
+            title        ?? Constants.Item.Title,
+            description  ?? Constants.Item.Description,
+            categoryName ?? Constants.Item.CategoryName,
+            condition    ?? Constants.Item.Condition,
+            userId       ?? Constants.Item.UserId
         );
 
         return command;
@@ -49,8 +51,7 @@ public static class ItemCommandUtils
         return command;
     }
 
-    public static UpdateItemCommand NewUpdateItemCommand
-    (
+    public static UpdateItemCommand NewUpdateItemCommand(
         Guid?   itemId,
         string? title,
         string? description,

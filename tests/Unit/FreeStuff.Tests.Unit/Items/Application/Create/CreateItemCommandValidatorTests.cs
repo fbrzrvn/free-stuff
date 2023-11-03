@@ -15,13 +15,14 @@ public class CreateItemCommandValidatorTests
         var createItemCommand = ItemCommandUtils.NewCreateItemCommand();
 
         // Act
-        var result = _validator.TestValidate(createItemCommand);
+        var actual = _validator.TestValidate(createItemCommand);
 
         // Assert
-        result.ShouldNotHaveValidationErrorFor(request => request.Title);
-        result.ShouldNotHaveValidationErrorFor(request => request.Description);
-        result.ShouldNotHaveValidationErrorFor(request => request.Condition);
-        result.ShouldNotHaveValidationErrorFor(request => request.UserId);
+        actual.ShouldNotHaveValidationErrorFor(request => request.Title);
+        actual.ShouldNotHaveValidationErrorFor(request => request.Description);
+        actual.ShouldNotHaveValidationErrorFor(request => request.CategoryName);
+        actual.ShouldNotHaveValidationErrorFor(request => request.Condition);
+        actual.ShouldNotHaveValidationErrorFor(request => request.UserId);
     }
 
     [Fact]
@@ -31,6 +32,7 @@ public class CreateItemCommandValidatorTests
         var createItemCommand = ItemCommandUtils.NewCreateItemCommand(
             string.Empty,
             default,
+            string.Empty,
             "old but gold",
             Guid.Empty
         );
@@ -41,6 +43,7 @@ public class CreateItemCommandValidatorTests
         // Assert
         actual.ShouldHaveValidationErrorFor(request => request.Title);
         actual.ShouldNotHaveValidationErrorFor(request => request.Description);
+        actual.ShouldHaveValidationErrorFor(request => request.CategoryName);
         actual.ShouldHaveValidationErrorFor(request => request.Condition)
               .WithErrorMessage("Invalid item condition: old but gold");
         actual.ShouldHaveValidationErrorFor(request => request.UserId);

@@ -51,7 +51,7 @@ public class GetAllEndpointTests : IClassFixture<FreeStuffApiFactory>
         actual?.Data.First().Title.Should().Be("item C");
         actual?.Page.Should().Be(2);
         actual?.Limit.Should().Be(1);
-        actual?.TotalResults.Should().Be(1);
+        actual?.TotalResults.Should().Be(4);
         actual?.HasNextPage.Should().BeTrue();
     }
 }

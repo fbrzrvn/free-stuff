@@ -10,6 +10,7 @@ public class ItemMapping : IRegister
     {
         config.NewConfig<Item, ItemDto>()
               .Map(dest => dest.Id, src => src.Id.Value)
+              .Map(dest => dest.CategoryName, src => src.Category.Name)
               .Map(dest => dest.Condition, src => src.Condition.MapItemConditionToString())
               .Map(dest => dest.UserId, src => src.UserId.Value);
     }

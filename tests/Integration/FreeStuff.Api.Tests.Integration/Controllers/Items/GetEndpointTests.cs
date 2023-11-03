@@ -23,6 +23,7 @@ public class GetEndpointTests : IClassFixture<FreeStuffApiFactory>
         var createItemRequest = new CreateItemRequest(
             Constants.Item.Title,
             Constants.Item.Description,
+            Constants.Item.CategoryName,
             Constants.Item.Condition,
             Constants.Item.UserId
         );

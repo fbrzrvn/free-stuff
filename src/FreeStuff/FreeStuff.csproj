@@ -7,6 +7,8 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <Folder Include="Categories\Application\Delete\"/>
+        <Folder Include="Categories\Application\Update\"/>
         <Folder Include="Items\Application\Delete\"/>
         <Folder Include="Items\Application\Update\"/>
     </ItemGroup>

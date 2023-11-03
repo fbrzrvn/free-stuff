@@ -1,4 +1,6 @@
 using FluentAssertions;
+using FreeStuff.Categories.Domain;
+using FreeStuff.Categories.Domain.Ports;
 using FreeStuff.Items.Application.Create;
 using FreeStuff.Items.Application.Shared.Dto;
 using FreeStuff.Items.Domain;
@@ -12,12 +14,17 @@ namespace FreeStuff.Tests.Unit.Items.Application.Create;
 public class CreateItemCommandHandlerTests
 {
     private readonly CreateItemCommandHandler _handler;
-    private readonly IItemRepository          _itemRepository = Substitute.For<IItemRepository>();
-    private readonly IMapper                  _mapper         = Substitute.For<IMapper>();
+    private readonly ICategoryRepository      _categoryRepository = Substitute.For<ICategoryRepository>();
+    private readonly IItemRepository          _itemRepository     = Substitute.For<IItemRepository>();
+    private readonly IMapper                  _mapper             = Substitute.For<IMapper>();
 
     public CreateItemCommandHandlerTests()
     {
-        _handler = new CreateItemCommandHandler(_itemRepository, _mapper);
+        _handler = new CreateItemCommandHandler(
+            _categoryRepository,
+            _itemRepository,
+            _mapper
+        );
     }
 
     [Fact]
@@ -26,6 +33,7 @@ public class CreateItemCommandHandlerTests
         // Arrange
         var createItemCommand = ItemCommandUtils.NewCreateItemCommand();
 
+        _categoryRepository.GetAsync(Arg.Any<string>(), Arg.Any<CancellationToken>()).Returns(Category.Create("Other"));
         _itemRepository.CreateAsync(Arg.Any<Item>(), Arg.Any<CancellationToken>())
                        .ReturnsForAnyArgs(Task.FromResult(ItemUtils.CreateItem()));
 
@@ -40,6 +48,7 @@ public class CreateItemCommandHandlerTests
         actual.Value.Id.Should().NotBeEmpty();
         actual.Value.Title.Should().Be(createItemCommand.Title);
         actual.Value.Description.Should().Be(createItemCommand.Description);
+        actual.Value.CategoryName.Should().Be(createItemCommand.CategoryName);
         actual.Value.Condition.Should().Be(createItemCommand.Condition);
         actual.Value.UserId.Should().Be(createItemCommand.UserId);
 

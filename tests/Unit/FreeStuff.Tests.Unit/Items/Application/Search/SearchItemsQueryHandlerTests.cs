@@ -28,10 +28,12 @@ public class SearchItemsQueryHandlerTests
         var searchItemsQuery = new SearchItemsQuery(
             string.Empty,
             string.Empty,
+            string.Empty,
             string.Empty
         );
 
         _itemRepository.SearchAsync(
+                           Arg.Any<string>(),
                            Arg.Any<string>(),
                            Arg.Any<ItemCondition>(),
                            Arg.Any<string>(),
@@ -51,6 +53,7 @@ public class SearchItemsQueryHandlerTests
 
         await _itemRepository.Received(1)
                              .SearchAsync(
+                                 string.Empty,
                                  string.Empty,
                                  Arg.Any<ItemCondition>(),
                                  string.Empty,
@@ -75,11 +78,13 @@ public class SearchItemsQueryHandlerTests
         var searchItemsQuery = new SearchItemsQuery(
             "item",
             string.Empty,
+            string.Empty,
             string.Empty
         );
 
         _itemRepository
             .SearchAsync(
+                Arg.Any<string>(),
                 Arg.Any<string>(),
                 Arg.Any<ItemCondition>(),
                 Arg.Any<string>(),
@@ -101,6 +106,7 @@ public class SearchItemsQueryHandlerTests
         await _itemRepository.Received(1)
                              .SearchAsync(
                                  searchItemsQuery.Title,
+                                 string.Empty,
                                  Arg.Any<ItemCondition>(),
                                  string.Empty,
                                  CancellationToken.None

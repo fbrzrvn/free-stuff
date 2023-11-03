@@ -36,6 +36,7 @@ public class EfItemRepositoryTests : IDisposable
         actual.Id.Should().NotBeNull();
         actual.Title.Should().Be(Constants.Item.Title);
         actual.Description.Should().Be(Constants.Item.Description);
+        actual.Category.Name.Should().Be(Constants.Item.CategoryName);
         actual.Condition.Should().Be(Constants.Item.Condition.MapExactStringToItemCondition());
         actual.UserId.Value.Should().Be(Constants.Item.UserId);
         actual.CreatedDateTime.Should().BeSameDateAs(DateTime.UtcNow);
@@ -94,6 +95,7 @@ public class EfItemRepositoryTests : IDisposable
         // Act
         var actual = await _itemRepository.SearchAsync(
             string.Empty,
+            string.Empty,
             Constants.Item.Condition.MapExactStringToItemCondition(),
             string.Empty,
             CancellationToken.None
@@ -112,6 +114,7 @@ public class EfItemRepositoryTests : IDisposable
         // Act
         var itemsEnumerable = await _itemRepository.SearchAsync(
             "item",
+            string.Empty,
             item.Condition,
             string.Empty,
             CancellationToken.None

@@ -18,6 +18,7 @@ public class ItemTests
         actual.Should().NotBeNull();
         actual.Title.Should().Be(Constants.Item.Title);
         actual.Description.Should().Be(Constants.Item.Description);
+        actual.Category.Name.Should().Be(Constants.Item.CategoryName);
         actual.Condition.Should().Be(Constants.Item.Condition.MapExactStringToItemCondition());
         actual.UserId.Should().Be(UserId.Create(Constants.Item.UserId));
         actual.CreatedDateTime.Should().BeSameDateAs(DateTime.UtcNow);

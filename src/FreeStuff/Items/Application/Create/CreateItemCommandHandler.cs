@@ -1,6 +1,8 @@
+using ErrorOr;
+using FreeStuff.Categories.Domain.Errors;
+using FreeStuff.Categories.Domain.Ports;
 using FreeStuff.Items.Domain;
 using FreeStuff.Items.Domain.Ports;
-using ErrorOr;
 using FreeStuff.Items.Application.Shared.Dto;
 using FreeStuff.Items.Application.Shared.Mapping;
 using MapsterMapper;
@@ -10,20 +12,34 @@ namespace FreeStuff.Items.Application.Create;
 
 public sealed class CreateItemCommandHandler : IRequestHandler<CreateItemCommand, ErrorOr<ItemDto>>
 {
-    private readonly IItemRepository _itemRepository;
-    private readonly IMapper         _mapper;
+    private readonly ICategoryRepository _categoryRepository;
+    private readonly IItemRepository     _itemRepository;
+    private readonly IMapper             _mapper;
 
-    public CreateItemCommandHandler(IItemRepository itemRepository, IMapper mapper)
+    public CreateItemCommandHandler(
+        ICategoryRepository categoryRepository,
+        IItemRepository     itemRepository,
+        IMapper             mapper
+    )
     {
-        _itemRepository = itemRepository;
-        _mapper         = mapper;
+        _categoryRepository = categoryRepository;
+        _itemRepository     = itemRepository;
+        _mapper             = mapper;
     }
 
     public async Task<ErrorOr<ItemDto>> Handle(CreateItemCommand request, CancellationToken cancellationToken)
     {
+        var category = await _categoryRepository.GetAsync(request.CategoryName, cancellationToken);
+
+        if (category is null)
+        {
+            return Errors.Category.NotFound(request.CategoryName);
+        }
+
         var item = Item.Create(
             request.Title,
             request.Description,
+            category,
             request.Condition.MapExactStringToItemCondition(),
             request.UserId
         );

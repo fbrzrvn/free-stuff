@@ -23,14 +23,16 @@ public class EfItemRepository : IItemRepository
 
     public async Task<Item?> GetAsync(ItemId id, CancellationToken cancellationToken)
     {
-        var item = await _context.Items.SingleOrDefaultAsync(i => i.Id == id, cancellationToken);
+        var item = await _context.Items.Include(item => item.Category)
+                                 .SingleOrDefaultAsync(i => i.Id == id, cancellationToken);
 
         return item;
     }
 
     public async Task<IEnumerable<Item>?> GetAllAsync(int page, int limit, CancellationToken cancellationToken)
     {
-        var items = await _context.Items.OrderByDescending(item => item.CreatedDateTime)
+        var items = await _context.Items.Include(item => item.Category)
+                                  .OrderByDescending(item => item.CreatedDateTime)
                                   .Skip((page - 1) * limit)
                                   .Take(limit)
                                   .ToListAsync(cancellationToken);
@@ -40,16 +42,22 @@ public class EfItemRepository : IItemRepository
 
     public async Task<IEnumerable<Item>?> SearchAsync(
         string?           title,
+        string?           categoryName,
         ItemCondition?    condition,
         string?           sortBy,
         CancellationToken cancellationToken
     )
     {
-        var query = _context.Items.AsQueryable();
+        var query = _context.Items.Include(item => item.Category).AsQueryable();
 
         if (!string.IsNullOrEmpty(title))
         {
-            query = _context.Items.Where(item => item.Title.ToLower().Contains(title.ToLower()));
+            query = query.Where(item => item.Title.ToLower().Contains(title.ToLower()));
+        }
+
+        if (!string.IsNullOrEmpty(categoryName))
+        {
+            query = query.Where(item => item.Category.Name.ToLower().Contains(categoryName.ToLower()));
         }
 
         if (condition != ItemCondition.None)

@@ -8,6 +8,7 @@ public record CreateItemCommand
 (
     string Title,
     string Description,
+    string CategoryName,
     string Condition,
     Guid   UserId
 ) : IRequest<ErrorOr<ItemDto>>;

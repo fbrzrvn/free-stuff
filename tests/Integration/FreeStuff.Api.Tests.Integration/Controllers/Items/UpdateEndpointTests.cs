@@ -30,13 +30,13 @@ public class UpdateEndpointTests : IClassFixture<FreeStuffApiFactory>
     {
         // Arrange
         var createdResponse = await _httpClient.PostAsJsonAsync(
-            "items",
+            ApiEndpoints.Items.Base,
             _createItemRequest,
             CancellationToken.None
         );
 
         await _httpClient.PostAsJsonAsync(
-            "categories",
+            ApiEndpoints.Category.Base,
             new CreateCategoryRequest(
                 Constants.Category.EditedName,
                 Constants.Category.Description
@@ -56,7 +56,7 @@ public class UpdateEndpointTests : IClassFixture<FreeStuffApiFactory>
 
         // Act
         var response = await _httpClient.PutAsJsonAsync(
-            $"items/{item!.Id}",
+            $"{ApiEndpoints.Items.Base}/{item!.Id}",
             updateItemRequest,
             CancellationToken.None
         );
@@ -70,7 +70,7 @@ public class UpdateEndpointTests : IClassFixture<FreeStuffApiFactory>
     {
         // Arrange
         var createdResponse = await _httpClient.PostAsJsonAsync(
-            "items",
+            ApiEndpoints.Items.Base,
             _createItemRequest,
             CancellationToken.None
         );
@@ -86,7 +86,7 @@ public class UpdateEndpointTests : IClassFixture<FreeStuffApiFactory>
 
         // Act
         var response = await _httpClient.PutAsJsonAsync(
-            $"items/{item!.Id}",
+            $"{ApiEndpoints.Items.Base}/{item!.Id}",
             updateItemRequest,
             CancellationToken.None
         );
@@ -109,7 +109,7 @@ public class UpdateEndpointTests : IClassFixture<FreeStuffApiFactory>
 
         // Act
         var response = await _httpClient.PutAsJsonAsync(
-            $"items/{Guid.NewGuid()}",
+            $"{ApiEndpoints.Items.Base}/{Guid.NewGuid()}",
             updateItemRequest,
             CancellationToken.None
         );

@@ -19,7 +19,7 @@ public class GetAllEndpointTests : IClassFixture<FreeStuffApiFactory>
     {
         // Act
         var response = await _httpClient.GetAsync(
-            "items",
+            ApiEndpoints.Items.Base,
             CancellationToken.None
         );
 
@@ -39,7 +39,7 @@ public class GetAllEndpointTests : IClassFixture<FreeStuffApiFactory>
     {
         // Act
         var response = await _httpClient.GetAsync(
-            "items?page=2&limit=1",
+            $"{ApiEndpoints.Items.Base}?page=2&limit=1",
             CancellationToken.None
         );
 

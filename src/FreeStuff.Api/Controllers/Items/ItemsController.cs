@@ -12,7 +12,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FreeStuff.Api.Controllers.Items;
 
-[Route("items")]
 public class ItemsController : ApiController
 {
     private readonly ISender _bus;
@@ -24,7 +23,7 @@ public class ItemsController : ApiController
         _mapper = mapper;
     }
 
-    [HttpPost("")]
+    [HttpPost(ApiEndpoints.Items.Create)]
     public async Task<IActionResult> Create([FromBody] CreateItemRequest request, CancellationToken cancellationToken)
     {
         var command = _mapper.Map<CreateItemCommand>(request);
@@ -40,7 +39,7 @@ public class ItemsController : ApiController
         );
     }
 
-    [HttpGet("{id}", Name = "Get")]
+    [HttpGet(ApiEndpoints.Items.Get, Name = "Get")]
     public async Task<IActionResult> Get([FromRoute] Guid id, CancellationToken cancellationToken)
     {
         var query  = new GetItemQuery(id);
@@ -52,7 +51,7 @@ public class ItemsController : ApiController
         );
     }
 
-    [HttpGet("")]
+    [HttpGet(ApiEndpoints.Items.GetAll)]
     public async Task<IActionResult> GetAll([FromQuery] GetAllItemsRequest request, CancellationToken cancellationToken)
     {
         var query  = new GetAllItemsQuery(request.Page, request.Limit);
@@ -64,7 +63,7 @@ public class ItemsController : ApiController
         );
     }
 
-    [HttpGet("search")]
+    [HttpGet(ApiEndpoints.Items.Search)]
     public async Task<IActionResult> Search([FromQuery] SearchItemsRequest request, CancellationToken cancellationToken)
     {
         var query = new SearchItemsQuery(
@@ -81,7 +80,7 @@ public class ItemsController : ApiController
         );
     }
 
-    [HttpPut("{id}")]
+    [HttpPut(ApiEndpoints.Items.Update)]
     public async Task<IActionResult> Update(
         [FromRoute] Guid id,
         [FromBody] UpdateItemRequest request,
@@ -97,7 +96,7 @@ public class ItemsController : ApiController
         );
     }
 
-    [HttpDelete("{id}")]
+    [HttpDelete(ApiEndpoints.Items.Delete)]
     public async Task<IActionResult> Delete([FromRoute] Guid id, CancellationToken cancellationToken)
     {
         var command = new DeleteItemCommand(id);

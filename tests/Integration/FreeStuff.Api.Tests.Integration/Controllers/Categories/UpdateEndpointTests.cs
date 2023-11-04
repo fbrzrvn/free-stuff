@@ -28,7 +28,7 @@ public class UpdateEndpointTests : IClassFixture<FreeStuffApiFactory>
 
         // Act
         var response = await _httpClient.PutAsJsonAsync(
-            "categories",
+            ApiEndpoints.Category.Base,
             updateCategoryRequest,
             CancellationToken.None
         );
@@ -53,7 +53,7 @@ public class UpdateEndpointTests : IClassFixture<FreeStuffApiFactory>
 
         // Act
         var response = await _httpClient.PutAsJsonAsync(
-            "categories",
+            ApiEndpoints.Category.Base,
             updateCategoryRequest,
             CancellationToken.None
         );
@@ -74,7 +74,7 @@ public class UpdateEndpointTests : IClassFixture<FreeStuffApiFactory>
 
         // Act
         var response = await _httpClient.PutAsJsonAsync(
-            "categories",
+            ApiEndpoints.Category.Base,
             updateCategoryRequest,
             CancellationToken.None
         );

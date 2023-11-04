@@ -28,14 +28,14 @@ public class DeleteEndpointTests : IClassFixture<FreeStuffApiFactory>
             Constants.Item.UserId
         );
         var createdResponse = await _httpClient.PostAsJsonAsync(
-            "items",
+            ApiEndpoints.Items.Base,
             createItemRequest,
             CancellationToken.None
         );
         var item = await createdResponse.Content.ReadFromJsonAsync<ItemDto>();
 
         // Act
-        var response = await _httpClient.DeleteAsync($"items/{item!.Id}", CancellationToken.None);
+        var response = await _httpClient.DeleteAsync($"{ApiEndpoints.Items.Base}/{item!.Id}", CancellationToken.None);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.NoContent);
@@ -45,7 +45,10 @@ public class DeleteEndpointTests : IClassFixture<FreeStuffApiFactory>
     public async Task Delete_ShouldReturnsNotFound_WhenItemDoesNotExist()
     {
         // Act
-        var response = await _httpClient.DeleteAsync($"items/{Guid.NewGuid()}", CancellationToken.None);
+        var response = await _httpClient.DeleteAsync(
+            $"{ApiEndpoints.Items.Base}/{Guid.NewGuid()}",
+            CancellationToken.None
+        );
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);

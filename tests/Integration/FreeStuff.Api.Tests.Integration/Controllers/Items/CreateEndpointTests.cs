@@ -30,7 +30,7 @@ public class CreateEndpointTests : IClassFixture<FreeStuffApiFactory>
 
         // Act
         var response = await _httpClient.PostAsJsonAsync(
-            "items",
+            ApiEndpoints.Items.Base,
             createItemRequest,
             CancellationToken.None
         );
@@ -57,7 +57,7 @@ public class CreateEndpointTests : IClassFixture<FreeStuffApiFactory>
 
         // Act
         var response = await _httpClient.PostAsJsonAsync(
-            "items",
+            ApiEndpoints.Items.Base,
             createItemRequest,
             CancellationToken.None
         );

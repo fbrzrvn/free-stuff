@@ -25,7 +25,7 @@ public class SearchEndpointTests : IClassFixture<FreeStuffApiFactory>
     {
         // Act
         var response = await _httpClient.GetAsync(
-            $"items/search?{queryParams}",
+            $"{ApiEndpoints.Items.Search}?{queryParams}",
             CancellationToken.None
         );
 
@@ -44,7 +44,7 @@ public class SearchEndpointTests : IClassFixture<FreeStuffApiFactory>
     {
         // Act
         var response = await _httpClient.GetAsync(
-            $"items/search?{queryParams}",
+            $"{ApiEndpoints.Items.Search}?{queryParams}",
             CancellationToken.None
         );
 
@@ -60,7 +60,10 @@ public class SearchEndpointTests : IClassFixture<FreeStuffApiFactory>
     public async Task Search_ShouldReturnOkWithItemsList_WhenItemsMatchQuery()
     {
         // Act
-        var response = await _httpClient.GetAsync("items/search?categoryName=Test", CancellationToken.None);
+        var response = await _httpClient.GetAsync(
+            $"{ApiEndpoints.Items.Search}?categoryName=Test",
+            CancellationToken.None
+        );
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -73,7 +76,10 @@ public class SearchEndpointTests : IClassFixture<FreeStuffApiFactory>
     public async Task Search_ShouldReturnOkWithSortedItems_WhenSortByDesc()
     {
         // Act
-        var response = await _httpClient.GetAsync("items/search?title=item&sortBy=desc", CancellationToken.None);
+        var response = await _httpClient.GetAsync(
+            $"{ApiEndpoints.Items.Search}?title=item&sortBy=desc",
+            CancellationToken.None
+        );
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -87,7 +93,10 @@ public class SearchEndpointTests : IClassFixture<FreeStuffApiFactory>
     public async Task Search_ShouldReturnOkWithSortedItems_WhenSortByAsc()
     {
         // Act
-        var response = await _httpClient.GetAsync("items/search?title=item&sortBy=asc", CancellationToken.None);
+        var response = await _httpClient.GetAsync(
+            $"{ApiEndpoints.Items.Search}?title=item&sortBy=asc",
+            CancellationToken.None
+        );
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -102,7 +111,7 @@ public class SearchEndpointTests : IClassFixture<FreeStuffApiFactory>
     {
         // Act
         var response = await _httpClient.GetAsync(
-            "items/search",
+            ApiEndpoints.Items.Search,
             CancellationToken.None
         );
 

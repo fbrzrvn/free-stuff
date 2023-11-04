@@ -20,7 +20,7 @@ public class GetAllEndpointTests : IClassFixture<FreeStuffApiFactory>
     {
         // Act
         var response = await _httpClient.GetAsync(
-            "categories",
+            ApiEndpoints.Category.Base,
             CancellationToken.None
         );
 

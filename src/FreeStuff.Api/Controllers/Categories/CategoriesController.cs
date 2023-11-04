@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FreeStuff.Api.Controllers.Categories;
 
-[Route("categories")]
 public class CategoriesController : ApiController
 {
     private readonly ISender _bus;
@@ -21,7 +20,7 @@ public class CategoriesController : ApiController
         _mapper = mapper;
     }
 
-    [HttpPost("")]
+    [HttpPost(ApiEndpoints.Category.Create)]
     public async Task<IActionResult> Create(
         [FromBody] CreateCategoryRequest request,
         CancellationToken cancellationToken
@@ -48,7 +47,7 @@ public class CategoriesController : ApiController
         return Ok();
     }
 
-    [HttpGet("")]
+    [HttpGet(ApiEndpoints.Category.GetAll)]
     public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
     {
         var query  = new GetAllCategoriesQuery();
@@ -60,7 +59,7 @@ public class CategoriesController : ApiController
         );
     }
 
-    [HttpPut("")]
+    [HttpPut(ApiEndpoints.Category.Update)]
     public async Task<IActionResult> Update(
         [FromBody] UpdateCategoryRequest request,
         CancellationToken cancellationToken

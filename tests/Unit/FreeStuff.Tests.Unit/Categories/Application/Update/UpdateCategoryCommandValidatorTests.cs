@@ -12,7 +12,11 @@ public class UpdateCategoryCommandValidatorTests
     public void UpdateCategoryCommandValidator_ShouldNotThrowAValidationError_WhenCommandIsValid()
     {
         // Arrange
-        var updateCategoryCommand = new UpdateCategoryCommand(Constants.Category.Name, Constants.Category.EditedName);
+        var updateCategoryCommand = new UpdateCategoryCommand(
+            Constants.Category.Name,
+            Constants.Category.EditedName,
+            Constants.Category.Description
+        );
 
         // Act
         var actual = _validator.TestValidate(updateCategoryCommand);
@@ -20,13 +24,18 @@ public class UpdateCategoryCommandValidatorTests
         // Assert
         actual.ShouldNotHaveValidationErrorFor(request => request.Name);
         actual.ShouldNotHaveValidationErrorFor(request => request.NewName);
+        actual.ShouldNotHaveValidationErrorFor(request => request.Description);
     }
 
     [Fact]
     public void UpdateCategoryCommandValidator_ShouldThrowAValidationError_WhenCommandIsInvalid()
     {
         // Arrange
-        var updateCategoryCommand = new UpdateCategoryCommand(string.Empty, string.Empty);
+        var updateCategoryCommand = new UpdateCategoryCommand(
+            string.Empty,
+            string.Empty,
+            string.Empty
+        );
 
         // Act
         var actual = _validator.TestValidate(updateCategoryCommand);
@@ -34,5 +43,6 @@ public class UpdateCategoryCommandValidatorTests
         // Assert
         actual.ShouldHaveValidationErrorFor(request => request.Name);
         actual.ShouldHaveValidationErrorFor(request => request.NewName);
+        actual.ShouldHaveValidationErrorFor(request => request.Description);
     }
 }

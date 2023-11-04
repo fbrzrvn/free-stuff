@@ -33,6 +33,9 @@ public class EfCategoryRepositoryTests : IDisposable
         var actual = _dbContext.Categories.Single();
         actual.Id.Should().NotBeNull();
         actual.Name.Should().Be(Constants.Category.Name);
+        actual.Description.Should().Be(Constants.Category.Description);
+        actual.CreatedDateTime.Should().BeSameDateAs(DateTime.UtcNow);
+        actual.UpdatedDateTime.Should().Be(actual.CreatedDateTime);
     }
 
     [Fact]
@@ -79,7 +82,7 @@ public class EfCategoryRepositoryTests : IDisposable
         // Arrange
         var category = await CreateCategoryInContext();
 
-        category.Update(Constants.Category.EditedName);
+        category.Update(Constants.Category.EditedName, Constants.Category.EditedDescription);
 
         // Act
         _categoryRepository.Update(category);
@@ -90,6 +93,9 @@ public class EfCategoryRepositoryTests : IDisposable
         actual.Should().NotBeNull();
         actual.Should().BeEquivalentTo(category);
         actual.Name.Should().Be(Constants.Category.EditedName);
+        actual.Description.Should().Be(Constants.Category.EditedDescription);
+        actual.UpdatedDateTime.Should().NotBe(actual.CreatedDateTime);
+        actual.UpdatedDateTime.Should().BeSameDateAs(DateTime.UtcNow);
     }
 
     [Fact]
@@ -115,7 +121,7 @@ public class EfCategoryRepositoryTests : IDisposable
 
     private async Task<Category> CreateCategoryInContext()
     {
-        var category = Category.Create(Constants.Category.Name);
+        var category = Category.Create(Constants.Category.Name, Constants.Category.Description);
 
         await _categoryRepository.CreateAsync(category, CancellationToken.None);
         await _categoryRepository.SaveChangesAsync(CancellationToken.None);

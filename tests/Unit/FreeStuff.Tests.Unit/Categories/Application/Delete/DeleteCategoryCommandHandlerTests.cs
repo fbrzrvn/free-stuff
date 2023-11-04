@@ -21,7 +21,7 @@ public class DeleteCategoryCommandHandlerTests
     public async Task HandleDeleteCategoryCommandHandler_ShouldDeleteCategoryAndReturnTrue_WhenFound()
     {
         // Arrange
-        var category              = Category.Create(Constants.Category.Name);
+        var category              = Category.Create(Constants.Category.Name, Constants.Category.Description);
         var deleteCategoryCommand = new DeleteCategoryCommand(category.Name);
 
         _categoryRepository.GetAsync(Arg.Any<string>(), Arg.Any<CancellationToken>()).Returns(category);

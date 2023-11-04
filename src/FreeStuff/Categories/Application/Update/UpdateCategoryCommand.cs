@@ -4,4 +4,4 @@ using MediatR;
 
 namespace FreeStuff.Categories.Application.Update;
 
-public record UpdateCategoryCommand(string Name, string NewName) : IRequest<ErrorOr<CategoryDto>>;
+public record UpdateCategoryCommand(string Name, string NewName, string Description) : IRequest<ErrorOr<CategoryDto>>;

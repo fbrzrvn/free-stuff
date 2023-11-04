@@ -24,12 +24,20 @@ public class UpdateCategoryCommandHandlerTests
     public async Task HandleUpdateCategoryCommandHandler_ShouldUpdateCategory_WhenFound()
     {
         // Arrange
-        var updateCategoryCommand = new UpdateCategoryCommand(Constants.Category.Name, Constants.Category.EditedName);
-        var category              = Category.Create(Constants.Category.Name);
+        var updateCategoryCommand = new UpdateCategoryCommand(
+            Constants.Category.Name,
+            Constants.Category.EditedName,
+            Constants.Category.Description
+        );
+        var category = Category.Create(Constants.Category.Name, Constants.Category.Description);
 
-        category.Update(Constants.Category.EditedName);
+        category.Update(Constants.Category.EditedName, Constants.Category.Description);
 
-        var expected = new CategoryDto(category.Id.Value, category.Name);
+        var expected = new CategoryDto(
+            category.Id.Value,
+            category.Name,
+            category.Description
+        );
 
         _categoryRepository
             .GetAsync(Arg.Any<string>(), Arg.Any<CancellationToken>())
@@ -54,7 +62,11 @@ public class UpdateCategoryCommandHandlerTests
     public async Task HandleUpdateCategoryCommandHandler_ShouldReturnNotFoundError_WhenNotFound()
     {
         // Arrange
-        var updateCategoryCommand = new UpdateCategoryCommand(Constants.Category.Name, Constants.Category.EditedName);
+        var updateCategoryCommand = new UpdateCategoryCommand(
+            Constants.Category.Name,
+            Constants.Category.EditedName,
+            Constants.Category.Description
+        );
 
         _categoryRepository
             .GetAsync(Arg.Any<string>(), Arg.Any<CancellationToken>())

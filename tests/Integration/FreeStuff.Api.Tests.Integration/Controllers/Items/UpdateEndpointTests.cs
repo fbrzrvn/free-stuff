@@ -38,7 +38,8 @@ public class UpdateEndpointTests : IClassFixture<FreeStuffApiFactory>
         await _httpClient.PostAsJsonAsync(
             "categories",
             new CreateCategoryRequest(
-                Constants.Category.EditedName
+                Constants.Category.EditedName,
+                Constants.Category.Description
             ),
             CancellationToken.None
         );

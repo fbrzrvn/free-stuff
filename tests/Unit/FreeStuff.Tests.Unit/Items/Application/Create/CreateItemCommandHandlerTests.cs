@@ -6,6 +6,7 @@ using FreeStuff.Items.Application.Shared.Dto;
 using FreeStuff.Items.Domain;
 using FreeStuff.Items.Domain.Ports;
 using FreeStuff.Tests.Unit.Items.TestUtils;
+using FreeStuff.Tests.Utils.Constants;
 using MapsterMapper;
 using NSubstitute;
 
@@ -32,8 +33,9 @@ public class CreateItemCommandHandlerTests
     {
         // Arrange
         var createItemCommand = ItemCommandUtils.NewCreateItemCommand();
+        var category          = Category.Create(Constants.Category.Name);
 
-        _categoryRepository.GetAsync(Arg.Any<string>(), Arg.Any<CancellationToken>()).Returns(Category.Create("Other"));
+        _categoryRepository.GetAsync(Arg.Any<string>(), Arg.Any<CancellationToken>()).Returns(category);
         _itemRepository.CreateAsync(Arg.Any<Item>(), Arg.Any<CancellationToken>())
                        .ReturnsForAnyArgs(Task.FromResult(ItemUtils.CreateItem()));
 

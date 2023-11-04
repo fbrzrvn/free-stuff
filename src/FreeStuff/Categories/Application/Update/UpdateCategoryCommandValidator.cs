@@ -8,5 +8,6 @@ public class UpdateCategoryCommandValidator : AbstractValidator<UpdateCategoryCo
     {
         RuleFor(request => request.Name).NotEmpty();
         RuleFor(request => request.NewName).NotEmpty().NotEqual(request => request.Name);
+        RuleFor(request => request.Description).NotEmpty();
     }
 }

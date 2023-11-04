@@ -46,11 +46,17 @@ public class GetAllCategoryQueryHandlerTests
         // Arrange
         var expectedCategories = new List<Category>
         {
-            Category.Create(Constants.Category.Name)
+            Category.Create(Constants.Category.Name, Constants.Category.Description)
         };
 
         var expectedCategoriesDtos = expectedCategories
-                                     .Select(c => new CategoryDto(c.Id.Value, c.Name))
+                                     .Select(
+                                         c => new CategoryDto(
+                                             c.Id.Value,
+                                             c.Name,
+                                             c.Description
+                                         )
+                                     )
                                      .ToList();
 
         var getAllCategoriesQuery = new GetAllCategoriesQuery();

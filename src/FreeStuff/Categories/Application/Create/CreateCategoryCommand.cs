@@ -6,5 +6,6 @@ namespace FreeStuff.Categories.Application.Create;
 
 public record CreateCategoryCommand
 (
-    string Name
+    string  Name,
+    string? Description
 ) : IRequest<ErrorOr<CategoryDto>>;

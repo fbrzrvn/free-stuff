@@ -20,7 +20,11 @@ public class UpdateEndpointTests : IClassFixture<FreeStuffApiFactory>
     public async Task Update_ShouldUpdateCategory_WhenFoundAndValidRequestIsSent()
     {
         // Arrange
-        var updateCategoryRequest = new UpdateCategoryRequest(Constants.Category.Test, Constants.Category.EditedName);
+        var updateCategoryRequest = new UpdateCategoryRequest(
+            Constants.Category.Test,
+            Constants.Category.EditedName,
+            Constants.Category.EditedDescription
+        );
 
         // Act
         var response = await _httpClient.PutAsJsonAsync(
@@ -34,13 +38,18 @@ public class UpdateEndpointTests : IClassFixture<FreeStuffApiFactory>
 
         var actual = await response.Content.ReadFromJsonAsync<CategoryResponse>();
         actual?.Name.Should().Be(Constants.Category.EditedName);
+        actual?.Description.Should().Be(Constants.Category.EditedDescription);
     }
 
     [Fact]
     public async Task Update_ShouldReturnBadRequest_WhenInvalidRequestIsSent()
     {
         // Arrange
-        var updateCategoryRequest = new UpdateCategoryRequest(Constants.Category.Test, string.Empty);
+        var updateCategoryRequest = new UpdateCategoryRequest(
+            Constants.Category.Test,
+            string.Empty,
+            string.Empty
+        );
 
         // Act
         var response = await _httpClient.PutAsJsonAsync(
@@ -57,7 +66,11 @@ public class UpdateEndpointTests : IClassFixture<FreeStuffApiFactory>
     public async Task Update_ShouldReturnsNotFound_WhenCategoryDoesNotExist()
     {
         // Arrange
-        var updateCategoryRequest = new UpdateCategoryRequest(Constants.Category.Name, Constants.Category.EditedName);
+        var updateCategoryRequest = new UpdateCategoryRequest(
+            Constants.Category.Name,
+            Constants.Category.EditedName,
+            Constants.Category.Description
+        );
 
         // Act
         var response = await _httpClient.PutAsJsonAsync(

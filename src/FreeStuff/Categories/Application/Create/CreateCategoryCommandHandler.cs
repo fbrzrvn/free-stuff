@@ -28,7 +28,9 @@ public class CreateCategoryCommandHandler : IRequestHandler<CreateCategoryComman
             return Errors.Category.DuplicateCategoryName(request.Name);
         }
 
-        var category = Category.Create(request.Name);
+        var category = string.IsNullOrEmpty(request.Description)
+            ? Category.Create(request.Name)
+            : Category.Create(request.Name, request.Description);
 
         await _categoryRepository.CreateAsync(category, cancellationToken);
         await _categoryRepository.SaveChangesAsync(cancellationToken);

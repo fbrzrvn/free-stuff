@@ -24,13 +24,21 @@ public class CreateCategoryCommandHandlerTests
     public async Task HandleCreateCategoryCommand_ShouldCreateAndReturnCategory_WhenCategoryIsValid()
     {
         // Arrange
-        var createCategoryCommand = new CreateCategoryCommand(Constants.Category.Name);
+        var createCategoryCommand = new CreateCategoryCommand(Constants.Category.Name, Constants.Category.Description);
 
         _categoryRepository.CreateAsync(Arg.Any<Category>(), Arg.Any<CancellationToken>())
-                           .ReturnsForAnyArgs(Task.FromResult(Category.Create(Constants.Category.Name)));
+                           .ReturnsForAnyArgs(
+                               Task.FromResult(Category.Create(Constants.Category.Name, Constants.Category.Description))
+                           );
 
         _mapper.Map<CategoryDto>(Arg.Any<Category>())
-               .Returns(new CategoryDto(Guid.NewGuid(), Constants.Category.Name));
+               .Returns(
+                   new CategoryDto(
+                       Guid.NewGuid(),
+                       Constants.Category.Name,
+                       Constants.Category.Description
+                   )
+               );
 
         // Act
         var actual = await _handler.Handle(createCategoryCommand, CancellationToken.None);

@@ -51,6 +51,8 @@ public class FreeStuffDbContext : DbContext
                 entity.HasIndex(category => category.Name).IsUnique();
                 entity.Property(category => category.Name).HasMaxLength(100);
 
+                entity.Property(category => category.Description).HasMaxLength(500);
+
                 entity.HasMany(category => category.Items)
                       .WithOne(item => item.Category)
                       .HasForeignKey(item => item.CategoryId);

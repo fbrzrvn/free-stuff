@@ -6,6 +6,10 @@ public class CreateCategoryCommandValidator : AbstractValidator<CreateCategoryCo
 {
     public CreateCategoryCommandValidator()
     {
-        RuleFor(request => request.Name).NotEmpty();
+        RuleFor(request => request.Name).NotEmpty().MaximumLength(100);
+        RuleFor(request => request.Description)
+            .Cascade(CascadeMode.Continue)
+            .MaximumLength(500)
+            .When(request => !string.IsNullOrWhiteSpace(request.Description));
     }
 }

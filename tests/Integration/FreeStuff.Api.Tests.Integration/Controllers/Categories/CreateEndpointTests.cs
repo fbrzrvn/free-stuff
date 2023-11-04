@@ -21,7 +21,8 @@ public class CreateEndpointTests : IClassFixture<FreeStuffApiFactory>
     {
         // Arrange
         var createCategoryRequest = new CreateCategoryRequest(
-            Constants.Category.Name
+            Constants.Category.Name,
+            Constants.Category.Description
         );
 
         // Act
@@ -43,6 +44,7 @@ public class CreateEndpointTests : IClassFixture<FreeStuffApiFactory>
     {
         // Arrange
         var createCategoryRequest = new CreateCategoryRequest(
+            string.Empty,
             string.Empty
         );
 
@@ -62,7 +64,8 @@ public class CreateEndpointTests : IClassFixture<FreeStuffApiFactory>
     {
         // Arrange
         var createCategoryRequest = new CreateCategoryRequest(
-            Constants.Category.Test
+            Constants.Category.Test,
+            Constants.Category.Description
         );
 
         // Act

@@ -12,25 +12,27 @@ public class CreateCategoryCommandValidatorTests
     public void CreateCategoryCommandValidator_ShouldNotThrowAValidationError_WhenCommandIsValid()
     {
         // Arrange
-        var createCategoryCommand = new CreateCategoryCommand(Constants.Category.Name);
+        var createCategoryCommand = new CreateCategoryCommand(Constants.Category.Name, Constants.Category.Description);
 
         // Act
         var actual = _validator.TestValidate(createCategoryCommand);
 
         // Assert
         actual.ShouldNotHaveValidationErrorFor(request => request.Name);
+        actual.ShouldNotHaveValidationErrorFor(request => request.Description);
     }
 
     [Fact]
     public void CreateCategoryCommandValidator_ShouldThrowAValidationError_WhenCommandIsInvalid()
     {
         // Arrange
-        var createCategoryCommand = new CreateCategoryCommand(string.Empty);
+        var createCategoryCommand = new CreateCategoryCommand(string.Empty, string.Empty);
 
         // Act
         var actual = _validator.TestValidate(createCategoryCommand);
 
         // Assert
         actual.ShouldHaveValidationErrorFor(request => request.Name);
+        actual.ShouldHaveValidationErrorFor(request => request.Description);
     }
 }

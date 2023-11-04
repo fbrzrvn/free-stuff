@@ -132,7 +132,7 @@ public class EfItemRepositoryTests : IDisposable
     {
         // Arrange
         var item     = await CreateItemInContext();
-        var category = Category.Create(Constants.Category.EditedName);
+        var category = Category.Create(Constants.Category.EditedName, string.Empty);
 
         item.Update(
             Constants.Item.EditedTitle,
@@ -175,7 +175,18 @@ public class EfItemRepositoryTests : IDisposable
 
     public void Dispose()
     {
+        ClearDatabase();
         _dbContext.Dispose();
+    }
+
+    private void ClearDatabase()
+    {
+        var items = _dbContext.Items.ToList();
+
+        foreach (var item in items)
+            _dbContext.Items.Remove(item);
+
+        _dbContext.SaveChanges();
     }
 
     private async Task<Item> CreateItemInContext()

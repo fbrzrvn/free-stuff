@@ -27,7 +27,7 @@ public class UpdateCategoryCommandHandler : IRequestHandler<UpdateCategoryComman
             return Errors.Category.NotFound(request.Name);
         }
 
-        category.Update(request.NewName);
+        category.Update(request.NewName, request.Description);
 
         _categoryRepository.Update(category);
         await _categoryRepository.SaveChangesAsync(cancellationToken);

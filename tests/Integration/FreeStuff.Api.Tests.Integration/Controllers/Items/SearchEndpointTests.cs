@@ -16,10 +16,11 @@ public class SearchEndpointTests : IClassFixture<FreeStuffApiFactory>
 
     [Theory]
     [InlineData("title=keyboard")]
+    [InlineData("categoryName=games")]
     [InlineData("condition=as good")]
-    [InlineData("title=keyboard&condition=as good")]
-    [InlineData("title=keyboard&condition=new")]
-    [InlineData("title=item&condition=as good")]
+    [InlineData("title=keyboard&categoryName=games&condition=as good")]
+    [InlineData("title=keyboard&categoryName=games&condition=new")]
+    [InlineData("title=item&categoryName=games&condition=as good")]
     public async Task Search_ReturnsOkWithEmptyList_WhenNoItemsMatchQuery(string queryParams)
     {
         // Act
@@ -56,6 +57,19 @@ public class SearchEndpointTests : IClassFixture<FreeStuffApiFactory>
     }
 
     [Fact]
+    public async Task Search_ShouldReturnOkWithItemsList_WhenItemsMatchQuery()
+    {
+        // Act
+        var response = await _httpClient.GetAsync("items/search?categoryName=Test", CancellationToken.None);
+
+        // Assert
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var actual = await response.Content.ReadFromJsonAsync<ItemsResponse>();
+        actual?.Data.Should().HaveCount(4);
+    }
+
+    [Fact]
     public async Task Search_ShouldReturnOkWithSortedItems_WhenSortByDesc()
     {
         // Act
@@ -82,7 +96,6 @@ public class SearchEndpointTests : IClassFixture<FreeStuffApiFactory>
         actual?.Data.First().Title.Should().Be("item A");
         actual?.Data.Last().Title.Should().Be("item D");
     }
-
 
     [Fact]
     public async Task Search_ShouldReturnsOkWithItemsList_WhenCallWithoutQueryParams()

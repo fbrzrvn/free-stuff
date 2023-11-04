@@ -69,7 +69,8 @@ public class FreeStuffApiFactory : WebApplicationFactory<IApiMarker>, IAsyncLife
 
         try
         {
-            var category = Category.Create("Other");
+            var category = Category.Create(Constants.Category.Test);
+            context.Categories.Add(category);
 
             if (!context.Items.Any())
             {

@@ -31,9 +31,21 @@ public class CategoriesController : ApiController
         var result  = await _bus.Send(command, cancellationToken);
 
         return result.Match(
-            category => Ok(_mapper.Map<CategoryResponse>(category)),
+            category => CreatedAtRoute(
+                "GetCategory",
+                new { id = category.Id },
+                _mapper.Map<CategoryResponse>(category)
+            ),
             errors => Problem(errors)
         );
+    }
+
+    [HttpGet("{id}", Name = "GetCategory")]
+    public async Task<IActionResult> Get([FromRoute] Guid id, CancellationToken cancellationToken)
+    {
+        await Task.CompletedTask;
+
+        return Ok();
     }
 
     [HttpGet("")]

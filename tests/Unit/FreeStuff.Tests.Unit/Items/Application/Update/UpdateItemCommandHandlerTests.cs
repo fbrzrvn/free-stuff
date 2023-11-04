@@ -1,4 +1,6 @@
 using FluentAssertions;
+using FreeStuff.Categories.Domain;
+using FreeStuff.Categories.Domain.Ports;
 using FreeStuff.Items.Application.Shared.Dto;
 using FreeStuff.Items.Application.Shared.Mapping;
 using FreeStuff.Items.Application.Update;
@@ -16,12 +18,17 @@ namespace FreeStuff.Tests.Unit.Items.Application.Update;
 public class UpdateItemCommandHandlerTests
 {
     private readonly UpdateItemCommandHandler _handler;
-    private readonly IItemRepository          _itemRepository = Substitute.For<IItemRepository>();
-    private readonly IMapper                  _mapper         = Substitute.For<IMapper>();
+    private readonly ICategoryRepository      _categoryRepository = Substitute.For<ICategoryRepository>();
+    private readonly IItemRepository          _itemRepository     = Substitute.For<IItemRepository>();
+    private readonly IMapper                  _mapper             = Substitute.For<IMapper>();
 
     public UpdateItemCommandHandlerTests()
     {
-        _handler = new UpdateItemCommandHandler(_itemRepository, _mapper);
+        _handler = new UpdateItemCommandHandler(
+            _categoryRepository,
+            _itemRepository,
+            _mapper
+        );
     }
 
     [Fact]
@@ -30,10 +37,12 @@ public class UpdateItemCommandHandlerTests
         // Arrange
         var updateItemCommand = ItemCommandUtils.NewUpdateItemCommand();
         var item              = ItemUtils.CreateItem();
+        var category          = Category.Create(Constants.Category.EditedName);
 
         item.Update(
             Constants.Item.EditedTitle,
             Constants.Item.EditedDescription,
+            category,
             Constants.Item.EditedCondition.MapExactStringToItemCondition()
         );
 
@@ -42,6 +51,8 @@ public class UpdateItemCommandHandlerTests
         _itemRepository
             .GetAsync(Arg.Any<ItemId>(), Arg.Any<CancellationToken>())
             .Returns(item);
+
+        _categoryRepository.GetAsync(Arg.Any<string>(), Arg.Any<CancellationToken>()).Returns(category);
 
         _mapper.Map<ItemDto>(Arg.Any<Item>())
                .Returns(expected);
@@ -53,8 +64,9 @@ public class UpdateItemCommandHandlerTests
         actual.IsError.Should().BeFalse();
         actual.Value.Should().BeEquivalentTo(expected);
 
-        await _itemRepository.Received(1).GetAsync(Arg.Any<ItemId>(), Arg.Any<CancellationToken>());
         _itemRepository.Received(1).Update(item);
+        await _itemRepository.Received(1).GetAsync(Arg.Any<ItemId>(), Arg.Any<CancellationToken>());
+        await _categoryRepository.Received(1).GetAsync(Arg.Any<string>(), Arg.Any<CancellationToken>());
         await _itemRepository.Received(1).SaveChangesAsync(Arg.Any<CancellationToken>());
     }
 
@@ -63,10 +75,13 @@ public class UpdateItemCommandHandlerTests
     {
         // Arrange
         var updateItemCommand = ItemCommandUtils.NewUpdateItemCommand();
+        var category          = Category.Create(Constants.Category.EditedName);
 
         _itemRepository
             .GetAsync(Arg.Any<ItemId>(), Arg.Any<CancellationToken>())
             .Returns((Item)null!);
+
+        _categoryRepository.GetAsync(Arg.Any<string>(), Arg.Any<CancellationToken>()).Returns(category);
 
         // Act
         var actual = await _handler.Handle(updateItemCommand, CancellationToken.None);

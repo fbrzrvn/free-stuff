@@ -1,4 +1,5 @@
 using FluentAssertions;
+using FreeStuff.Categories.Domain;
 using FreeStuff.Items.Application.Shared.Mapping;
 using FreeStuff.Items.Domain;
 using FreeStuff.Items.Domain.Ports;
@@ -36,7 +37,7 @@ public class EfItemRepositoryTests : IDisposable
         actual.Id.Should().NotBeNull();
         actual.Title.Should().Be(Constants.Item.Title);
         actual.Description.Should().Be(Constants.Item.Description);
-        actual.Category.Name.Should().Be(Constants.Item.CategoryName);
+        actual.Category.Name.Should().Be(Constants.Category.Name);
         actual.Condition.Should().Be(Constants.Item.Condition.MapExactStringToItemCondition());
         actual.UserId.Value.Should().Be(Constants.Item.UserId);
         actual.CreatedDateTime.Should().BeSameDateAs(DateTime.UtcNow);
@@ -130,11 +131,13 @@ public class EfItemRepositoryTests : IDisposable
     public async Task Update_ShouldUpdateItem_WhenExistsAndInputIsValid()
     {
         // Arrange
-        var item = await CreateItemInContext();
+        var item     = await CreateItemInContext();
+        var category = Category.Create(Constants.Category.EditedName);
 
         item.Update(
             Constants.Item.EditedTitle,
             Constants.Item.EditedDescription,
+            category,
             Constants.Item.EditedCondition.MapExactStringToItemCondition()
         );
 
@@ -148,6 +151,7 @@ public class EfItemRepositoryTests : IDisposable
         actual.Should().BeEquivalentTo(item);
         actual.Title.Should().Be(Constants.Item.EditedTitle);
         actual.Description.Should().Be(Constants.Item.EditedDescription);
+        actual.Category?.Name.Should().Be(Constants.Category.EditedName);
         actual.Condition.Should().Be(Constants.Item.EditedCondition.MapExactStringToItemCondition());
         actual.UpdatedDateTime.Should().NotBe(actual.CreatedDateTime);
         actual.UpdatedDateTime.Should().BeSameDateAs(DateTime.UtcNow);

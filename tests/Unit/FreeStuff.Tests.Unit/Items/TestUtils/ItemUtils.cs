@@ -8,7 +8,7 @@ namespace FreeStuff.Tests.Unit.Items.TestUtils;
 
 public static class ItemUtils
 {
-    private static readonly Category Category = Category.Create(Constants.Item.CategoryName);
+    private static readonly Category Category = Category.Create(Constants.Category.Name);
 
     public static Item CreateItem()
     {

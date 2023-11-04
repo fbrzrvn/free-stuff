@@ -23,7 +23,7 @@ public class CreateEndpointTests : IClassFixture<FreeStuffApiFactory>
         var createItemRequest = new CreateItemRequest(
             Constants.Item.Title,
             Constants.Item.Description,
-            Constants.Item.CategoryName,
+            Constants.Category.Test,
             Constants.Item.Condition,
             Constants.Item.UserId
         );
@@ -50,7 +50,7 @@ public class CreateEndpointTests : IClassFixture<FreeStuffApiFactory>
         var createItemRequest = new CreateItemRequest(
             Constants.Item.Title,
             Constants.Item.Description,
-            Constants.Item.CategoryName,
+            Constants.Category.Test,
             "Old but Gold",
             Constants.Item.UserId
         );

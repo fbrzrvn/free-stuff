@@ -68,13 +68,16 @@ public class Item : AggregateRoot<ItemId>
     }
 
     public void Update(
-        string title,
-        string description,
+        string        title,
+        string        description,
+        Category      category,
         ItemCondition condition
     )
     {
-        Title       = title;
-        Description = description;
+        Title           = title;
+        Description     = description;
+        Category        = category;
+        CategoryId      = category.Id;
         Condition       = condition;
         UpdatedDateTime = DateTime.UtcNow;
     }

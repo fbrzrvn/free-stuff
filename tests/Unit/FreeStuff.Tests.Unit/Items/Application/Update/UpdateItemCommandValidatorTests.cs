@@ -21,6 +21,7 @@ public class UpdateItemCommandValidatorTests
         result.ShouldNotHaveValidationErrorFor(request => request.Id);
         result.ShouldNotHaveValidationErrorFor(request => request.Title);
         result.ShouldNotHaveValidationErrorFor(request => request.Description);
+        result.ShouldNotHaveValidationErrorFor(request => request.CategoryName);
         result.ShouldNotHaveValidationErrorFor(request => request.Condition);
         result.ShouldNotHaveValidationErrorFor(request => request.UserId);
     }
@@ -31,6 +32,7 @@ public class UpdateItemCommandValidatorTests
         // Arrange
         var updateItemCommand = ItemCommandUtils.NewUpdateItemCommand(
             Guid.Empty,
+            string.Empty,
             string.Empty,
             string.Empty,
             "old but gold",
@@ -44,6 +46,7 @@ public class UpdateItemCommandValidatorTests
         actual.ShouldHaveValidationErrorFor(request => request.Id);
         actual.ShouldHaveValidationErrorFor(request => request.Title);
         actual.ShouldHaveValidationErrorFor(request => request.Description);
+        actual.ShouldHaveValidationErrorFor(request => request.CategoryName);
         actual.ShouldHaveValidationErrorFor(request => request.Condition)
               .WithErrorMessage("Invalid item condition: old but gold");
         actual.ShouldHaveValidationErrorFor(request => request.UserId);

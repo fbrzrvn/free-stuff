@@ -11,7 +11,7 @@ public static class ItemCommandUtils
         var command = new CreateItemCommand(
             Constants.Item.Title,
             Constants.Item.Description,
-            Constants.Item.CategoryName,
+            Constants.Category.Name,
             Constants.Item.Condition,
             Constants.Item.UserId
         );
@@ -30,7 +30,7 @@ public static class ItemCommandUtils
         var command = new CreateItemCommand(
             title        ?? Constants.Item.Title,
             description  ?? Constants.Item.Description,
-            categoryName ?? Constants.Item.CategoryName,
+            categoryName ?? Constants.Category.Name,
             condition    ?? Constants.Item.Condition,
             userId       ?? Constants.Item.UserId
         );
@@ -44,6 +44,7 @@ public static class ItemCommandUtils
             Guid.NewGuid(),
             Constants.Item.EditedTitle,
             Constants.Item.EditedDescription,
+            Constants.Category.EditedName,
             Constants.Item.EditedCondition,
             Constants.Item.UserId
         );
@@ -55,16 +56,18 @@ public static class ItemCommandUtils
         Guid?   itemId,
         string? title,
         string? description,
+        string? categoryName,
         string? condition,
         Guid?   userId
     )
     {
         var command = new UpdateItemCommand(
-            itemId      ?? Guid.NewGuid(),
-            title       ?? Constants.Item.EditedTitle,
-            description ?? Constants.Item.EditedDescription,
-            condition   ?? Constants.Item.EditedCondition,
-            userId      ?? Constants.Item.UserId
+            itemId       ?? Guid.NewGuid(),
+            title        ?? Constants.Item.EditedTitle,
+            description  ?? Constants.Item.EditedDescription,
+            categoryName ?? Constants.Category.EditedName,
+            condition    ?? Constants.Item.EditedCondition,
+            userId       ?? Constants.Item.UserId
         );
 
         return command;

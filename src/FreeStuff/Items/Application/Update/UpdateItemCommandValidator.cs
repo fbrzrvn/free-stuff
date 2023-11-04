@@ -10,7 +10,10 @@ public class UpdateItemCommandValidator : AbstractValidator<UpdateItemCommand>
         RuleFor(request => request.Id).NotEmpty();
         RuleFor(request => request.Title).NotEmpty().MaximumLength(100);
         RuleFor(request => request.Description).NotEmpty().MaximumLength(500);
-        RuleFor(request => request.Condition).Must(BeValidEnumValue).WithMessage(request => $"Invalid item condition: {request.Condition}");
+        RuleFor(request => request.CategoryName).NotEmpty();
+        RuleFor(request => request.Condition)
+            .Must(BeValidEnumValue)
+            .WithMessage(request => $"Invalid item condition: {request.Condition}");
         RuleFor(request => request.UserId).NotEmpty();
     }
 

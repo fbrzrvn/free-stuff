@@ -45,7 +45,10 @@ public class GetEndpointTests : IClassFixture<FreeStuffApiFactory>
     public async Task Get_ShouldReturnsNotFound_WhenItemDoesNotExist()
     {
         // Act
-        var response = await _httpClient.DeleteAsync($"items/{Guid.NewGuid()}", CancellationToken.None);
+        var response = await _httpClient.GetAsync(
+            $"{ApiEndpoints.Items.Base}/{Guid.NewGuid()}",
+            CancellationToken.None
+        );
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);

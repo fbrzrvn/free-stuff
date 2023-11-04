@@ -17,6 +17,7 @@ public static class ApiEndpoints
     {
         public const string Base   = "api/categories";
         public const string Create = Base;
+        public const string Get    = $"{Base}/{{name}}";
         public const string GetAll = Base;
         public const string Update = Base;
     }

@@ -1,4 +1,5 @@
 using FreeStuff.Categories.Application.Create;
+using FreeStuff.Categories.Application.Get;
 using FreeStuff.Categories.Application.GetAll;
 using FreeStuff.Categories.Application.Update;
 using FreeStuff.Contracts.Categories.Requests;
@@ -39,12 +40,16 @@ public class CategoriesController : ApiController
         );
     }
 
-    [HttpGet("{id}", Name = "GetCategory")]
-    public async Task<IActionResult> Get([FromRoute] Guid id, CancellationToken cancellationToken)
+    [HttpGet(ApiEndpoints.Category.Get, Name = "GetCategory")]
+    public async Task<IActionResult> Get([FromRoute] string name, CancellationToken cancellationToken)
     {
-        await Task.CompletedTask;
+        var query  = new GetCategoryQuery(name);
+        var result = await _bus.Send(query, cancellationToken);
 
-        return Ok();
+        return result.Match(
+            category => Ok(_mapper.Map<CategoryResponse>(category)),
+            errors => Problem(errors)
+        );
     }
 
     [HttpGet(ApiEndpoints.Category.GetAll)]

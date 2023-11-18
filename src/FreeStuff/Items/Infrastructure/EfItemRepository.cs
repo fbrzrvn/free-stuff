@@ -2,7 +2,7 @@ using FreeStuff.Items.Domain;
 using FreeStuff.Items.Domain.Enum;
 using FreeStuff.Items.Domain.Ports;
 using FreeStuff.Items.Domain.ValueObjects;
-using FreeStuff.Shared.Infrastructure;
+using FreeStuff.Shared.Infrastructure.EntityFramework;
 using Microsoft.EntityFrameworkCore;
 
 namespace FreeStuff.Items.Infrastructure;

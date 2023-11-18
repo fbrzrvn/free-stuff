@@ -4,7 +4,7 @@ using FreeStuff.Items.Application.Shared.Mapping;
 using FreeStuff.Items.Domain;
 using FreeStuff.Items.Domain.Ports;
 using FreeStuff.Items.Infrastructure;
-using FreeStuff.Shared.Infrastructure;
+using FreeStuff.Shared.Infrastructure.EntityFramework;
 using FreeStuff.Tests.Unit.Items.TestUtils;
 using FreeStuff.Tests.Utils.Constants;
 using Microsoft.EntityFrameworkCore;

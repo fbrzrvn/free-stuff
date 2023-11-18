@@ -2,7 +2,7 @@ using FluentAssertions;
 using FreeStuff.Categories.Domain;
 using FreeStuff.Categories.Domain.Ports;
 using FreeStuff.Categories.Infrastructure;
-using FreeStuff.Shared.Infrastructure;
+using FreeStuff.Shared.Infrastructure.EntityFramework;
 using FreeStuff.Tests.Utils.Constants;
 using Microsoft.EntityFrameworkCore;
 

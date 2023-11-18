@@ -6,7 +6,7 @@ using FreeStuff.User.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
-namespace FreeStuff.Shared.Infrastructure;
+namespace FreeStuff.Shared.Infrastructure.EntityFramework;
 
 public class FreeStuffDbContext : DbContext
 {

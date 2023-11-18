@@ -2,13 +2,19 @@ namespace FreeStuff.Shared.Domain;
 
 public abstract class ValueObject : IEquatable<ValueObject>
 {
-    public bool Equals(ValueObject? other) { return Equals((object?)other); }
+    public bool Equals(ValueObject? other)
+    {
+        return Equals((object?)other);
+    }
 
     protected abstract IEnumerable<object> GetEqualityComponents();
 
     public override bool Equals(object? obj)
     {
-        if (obj is null || obj.GetType() != GetType()) return false;
+        if (obj is null || obj.GetType() != GetType())
+        {
+            return false;
+        }
 
         var valueObject = (ValueObject)obj;
 

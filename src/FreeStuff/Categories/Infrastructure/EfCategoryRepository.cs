@@ -1,6 +1,6 @@
 using FreeStuff.Categories.Domain;
 using FreeStuff.Categories.Domain.Ports;
-using FreeStuff.Shared.Infrastructure;
+using FreeStuff.Shared.Infrastructure.EntityFramework;
 using Microsoft.EntityFrameworkCore;
 
 namespace FreeStuff.Categories.Infrastructure;

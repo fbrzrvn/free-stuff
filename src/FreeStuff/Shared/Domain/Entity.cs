@@ -2,11 +2,16 @@ namespace FreeStuff.Shared.Domain;
 
 public abstract class Entity<TId> : IEquatable<Entity<TId>> where TId : notnull
 {
-    protected Entity(TId id) { Id = id; }
-
-    protected Entity() { }
-
     public TId Id { get; }
+
+    protected Entity(TId id)
+    {
+        Id = id;
+    }
+
+    protected Entity()
+    {
+    }
 
     public bool Equals(Entity<TId>? other)
     {

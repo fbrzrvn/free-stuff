@@ -15,6 +15,7 @@ public static class Application
             cfg => cfg.RegisterServicesFromAssembly(typeof(IApplicationMarker).GetTypeInfo().Assembly)
         );
 
+        services.AddScoped(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
         services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviors<,>));
         services.AddValidatorsFromAssembly(typeof(IApplicationMarker).GetTypeInfo().Assembly);
 

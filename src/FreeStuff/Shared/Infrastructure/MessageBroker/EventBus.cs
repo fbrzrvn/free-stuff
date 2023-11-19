@@ -1,15 +1,15 @@
 using FreeStuff.Shared.Domain;
 using MassTransit;
-using Microsoft.Extensions.Logging;
+using Serilog;
 
 namespace FreeStuff.Shared.Infrastructure.MessageBroker;
 
 public sealed class EventBus : IEventBus
 {
-    private readonly IBus              _bus;
-    private readonly ILogger<EventBus> _logger;
+    private readonly IBus    _bus;
+    private readonly ILogger _logger;
 
-    public EventBus(IBus bus, ILogger<EventBus> logger)
+    public EventBus(IBus bus, ILogger logger)
     {
         _bus    = bus;
         _logger = logger;
@@ -20,14 +20,20 @@ public sealed class EventBus : IEventBus
         try
         {
             await _bus.Publish(message, cancellationToken);
-            _logger.LogInformation("Message of type {MessageType} published successfully.", typeof(T).FullName);
+            _logger.Information(
+                "Successfully published message of type {@MessageType}, {@DateTimeUtc}.",
+                typeof(T).FullName,
+                DateTime.UtcNow
+            );
         }
         catch (Exception ex)
         {
-            _logger.LogError(
+            _logger.Error(
                 ex,
-                "Error publishing message of type {MessageType}.",
-                typeof(T).FullName
+                "Error publishing message of type {@MessageType}, {@Error}, {@DateTimeUtc}.",
+                typeof(T).FullName,
+                ex.Message,
+                DateTime.UtcNow
             );
             throw;
         }

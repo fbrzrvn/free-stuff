@@ -1,8 +1,8 @@
 version: '3.9'
 
 services:
-  mysql:
-    container_name: mysql
+  fs.db:
+    container_name: fs-db
     image: mysql:latest
     ports:
       - '3306:3306'
@@ -25,3 +25,21 @@ services:
       interval: 5s
       timeout: 5s
       retries: 20
+
+  fs.mq:
+    container_name: fs-mq
+    image: rabbitmq:3-management
+    hostname: fs-mq
+    volumes:
+      - ./.containers/queue/data/:/var/lib/rabbitmq
+      - ./.containers/queue/log/:/var/log/rabbitmq
+    ports:
+      - '5672:5672'
+      - '15672:15672'
+    environment:
+      RABBITMQ_DEFAULT_USER: 'guest'
+      RABBITMQ_DEFAULT_PASS: 'guest'
+
+networks:
+  default:
+    driver: bridge

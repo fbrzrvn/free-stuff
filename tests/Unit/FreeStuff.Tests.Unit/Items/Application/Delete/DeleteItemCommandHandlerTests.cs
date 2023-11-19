@@ -1,7 +1,9 @@
 using FluentAssertions;
+using FreeStuff.Contracts.Items.Events;
 using FreeStuff.Items.Application.Delete;
 using FreeStuff.Items.Domain.Ports;
 using FreeStuff.Items.Domain.ValueObjects;
+using FreeStuff.Shared.Domain;
 using FreeStuff.Tests.Unit.Items.TestUtils;
 using FreeStuff.Tests.Utils.Extensions;
 using NSubstitute;
@@ -12,10 +14,11 @@ public class DeleteItemCommandHandlerTests
 {
     private readonly DeleteItemCommandHandler _handler;
     private readonly IItemRepository          _itemRepository = Substitute.For<IItemRepository>();
+    private readonly IEventBus                _eventBus       = Substitute.For<IEventBus>();
 
     public DeleteItemCommandHandlerTests()
     {
-        _handler = new DeleteItemCommandHandler(_itemRepository);
+        _handler = new DeleteItemCommandHandler(_itemRepository, _eventBus);
     }
 
     [Fact]
@@ -38,6 +41,7 @@ public class DeleteItemCommandHandlerTests
 
         _itemRepository.Received(1).Delete(item);
         await _itemRepository.Received(1).SaveChangesAsync(CancellationToken.None);
+        await _eventBus.Received(1).PublishAsync(Arg.Any<ItemDeleted>(), Arg.Any<CancellationToken>());
     }
 
     [Fact]
@@ -53,7 +57,8 @@ public class DeleteItemCommandHandlerTests
         // Assert
         actual.ValidateNotFoundError(item.Id.Value);
 
-        _itemRepository.Received(0).Delete(item);
-        await _itemRepository.Received(0).SaveChangesAsync(CancellationToken.None);
+        _itemRepository.DidNotReceive().Delete(item);
+        await _itemRepository.DidNotReceive().SaveChangesAsync(CancellationToken.None);
+        await _eventBus.DidNotReceive().PublishAsync(Arg.Any<ItemDeleted>(), Arg.Any<CancellationToken>());
     }
 }

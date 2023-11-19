@@ -1,10 +1,12 @@
 using ErrorOr;
 using FreeStuff.Categories.Domain.Ports;
+using FreeStuff.Contracts.Items.Events;
 using FreeStuff.Items.Application.Shared.Dto;
 using FreeStuff.Items.Application.Shared.Mapping;
 using FreeStuff.Items.Domain.Errors;
 using FreeStuff.Items.Domain.Ports;
 using FreeStuff.Items.Domain.ValueObjects;
+using FreeStuff.Shared.Domain;
 using MapsterMapper;
 using MediatR;
 
@@ -14,16 +16,19 @@ public sealed class UpdateItemCommandHandler : IRequestHandler<UpdateItemCommand
 {
     private readonly ICategoryRepository _categoryRepository;
     private readonly IItemRepository     _itemRepository;
+    private readonly IEventBus           _eventBus;
     private readonly IMapper             _mapper;
 
     public UpdateItemCommandHandler(
         ICategoryRepository categoryRepository,
         IItemRepository     itemRepository,
+        IEventBus           eventBus,
         IMapper             mapper
     )
     {
         _categoryRepository = categoryRepository;
         _itemRepository     = itemRepository;
+        _eventBus           = eventBus;
         _mapper             = mapper;
     }
 
@@ -52,6 +57,9 @@ public sealed class UpdateItemCommandHandler : IRequestHandler<UpdateItemCommand
 
         _itemRepository.Update(item);
         await _itemRepository.SaveChangesAsync(cancellationToken);
+
+        var itemUpdateEvent = _mapper.Map<ItemUpdated>(item);
+        await _eventBus.PublishAsync(itemUpdateEvent, cancellationToken);
 
         var result = _mapper.Map<ItemDto>(item);
 

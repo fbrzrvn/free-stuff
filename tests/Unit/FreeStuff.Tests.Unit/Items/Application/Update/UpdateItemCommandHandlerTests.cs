@@ -1,12 +1,14 @@
 using FluentAssertions;
 using FreeStuff.Categories.Domain;
 using FreeStuff.Categories.Domain.Ports;
+using FreeStuff.Contracts.Items.Events;
 using FreeStuff.Items.Application.Shared.Dto;
 using FreeStuff.Items.Application.Shared.Mapping;
 using FreeStuff.Items.Application.Update;
 using FreeStuff.Items.Domain;
 using FreeStuff.Items.Domain.Ports;
 using FreeStuff.Items.Domain.ValueObjects;
+using FreeStuff.Shared.Domain;
 using FreeStuff.Tests.Unit.Items.TestUtils;
 using FreeStuff.Tests.Utils.Constants;
 using FreeStuff.Tests.Utils.Extensions;
@@ -20,6 +22,7 @@ public class UpdateItemCommandHandlerTests
     private readonly UpdateItemCommandHandler _handler;
     private readonly ICategoryRepository      _categoryRepository = Substitute.For<ICategoryRepository>();
     private readonly IItemRepository          _itemRepository     = Substitute.For<IItemRepository>();
+    private readonly IEventBus                _eventBus           = Substitute.For<IEventBus>();
     private readonly IMapper                  _mapper             = Substitute.For<IMapper>();
 
     public UpdateItemCommandHandlerTests()
@@ -27,6 +30,7 @@ public class UpdateItemCommandHandlerTests
         _handler = new UpdateItemCommandHandler(
             _categoryRepository,
             _itemRepository,
+            _eventBus,
             _mapper
         );
     }
@@ -68,6 +72,7 @@ public class UpdateItemCommandHandlerTests
         await _itemRepository.Received(1).GetAsync(Arg.Any<ItemId>(), Arg.Any<CancellationToken>());
         await _categoryRepository.Received(1).GetAsync(Arg.Any<string>(), Arg.Any<CancellationToken>());
         await _itemRepository.Received(1).SaveChangesAsync(Arg.Any<CancellationToken>());
+        await _eventBus.Received(1).PublishAsync(Arg.Any<ItemUpdated>(), Arg.Any<CancellationToken>());
     }
 
     [Fact]
@@ -90,5 +95,6 @@ public class UpdateItemCommandHandlerTests
         actual.ValidateNotFoundError(updateItemCommand.Id);
 
         await _itemRepository.Received(1).GetAsync(Arg.Any<ItemId>(), CancellationToken.None);
+        await _eventBus.DidNotReceive().PublishAsync(Arg.Any<ItemDeleted>(), Arg.Any<CancellationToken>());
     }
 }

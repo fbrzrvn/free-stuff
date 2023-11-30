@@ -29,7 +29,6 @@ public sealed class EventBus : IEventBus
         catch (Exception ex)
         {
             _logger.Error(
-                ex,
                 "Error publishing message of type {@MessageType}, {@Error}, {@DateTimeUtc}.",
                 typeof(T).FullName,
                 ex.Message,

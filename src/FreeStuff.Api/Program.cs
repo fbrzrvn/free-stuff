@@ -1,4 +1,6 @@
 using FreeStuff.Api.Extensions.DependencyInjection;
+using FreeStuff.Shared.Infrastructure.EntityFramework;
+using Microsoft.EntityFrameworkCore;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -32,8 +34,17 @@ var app = builder.Build();
     app.UseExceptionHandler("/errors");
 
     app.UseHttpsRedirection();
+
+    app.UseAuthentication();
     app.UseAuthorization();
+
     app.MapControllers();
+
+    using (var scope = app.Services.CreateScope())
+    {
+        var dbContext = scope.ServiceProvider.GetRequiredService<FreeStuffDbContext>();
+        dbContext.Database.Migrate();
+    }
 
     app.Run();
 }

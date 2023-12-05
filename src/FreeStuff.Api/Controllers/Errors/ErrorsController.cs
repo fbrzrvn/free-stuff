@@ -5,6 +5,7 @@ namespace FreeStuff.Api.Controllers.Errors;
 
 public class ErrorsController : ControllerBase
 {
+    [ApiExplorerSettings(IgnoreApi=true)] // fix: Ambiguous HTTP method for action
     [Route("errors")]
     public IActionResult Error()
     {

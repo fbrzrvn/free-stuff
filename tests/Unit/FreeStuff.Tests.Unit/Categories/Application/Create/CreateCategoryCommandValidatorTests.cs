@@ -26,7 +26,7 @@ public class CreateCategoryCommandValidatorTests
     public void CreateCategoryCommandValidator_ShouldThrowAValidationError_WhenCommandIsInvalid()
     {
         // Arrange
-        var createCategoryCommand = new CreateCategoryCommand(string.Empty, string.Empty);
+        var createCategoryCommand = new CreateCategoryCommand(string.Empty, Constants.Category.InvalidDescriptionLenght);
 
         // Act
         var actual = _validator.TestValidate(createCategoryCommand);

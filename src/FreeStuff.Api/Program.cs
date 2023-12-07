@@ -1,5 +1,7 @@
 using FreeStuff.Api.Extensions.DependencyInjection;
 using FreeStuff.Shared.Infrastructure.EntityFramework;
+using HealthChecks.UI.Client;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 
@@ -15,6 +17,9 @@ var builder = WebApplication.CreateBuilder(args);
     builder.Services.AddInfrastructure(builder.Configuration);
     builder.Services.AddApplication();
     builder.Services.ConfigureApplicationServices(builder.Configuration);
+
+    builder.Services.AddHealthChecks()
+           .AddMySql(builder.Configuration.GetConnectionString("Default")!);
 
     builder.Services.AddControllers();
     builder.Services.AddEndpointsApiExplorer();
@@ -35,6 +40,11 @@ var app = builder.Build();
 
     app.UseHttpsRedirection();
 
+    app.MapHealthChecks("/_health", new HealthCheckOptions
+    {
+        ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+    });
+    
     app.UseAuthentication();
     app.UseAuthorization();
 

@@ -29,6 +29,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		docker-compose.yml = docker-compose.yml
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FreeStuff.Identity.Api", "src\FreeStuff.Identity.Api\FreeStuff.Identity.Api.csproj", "{EE5FC122-DCED-43D6-BCB1-5B81D9A3C36C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,7 @@ Global
 		{129A8908-BD66-4C4A-A6C4-5230416F225F} = {1D79F5C5-B270-4387-9F53-7DF24F5E6ABD}
 		{616DE2BE-1D29-40D5-A615-218F7272BFC0} = {129A8908-BD66-4C4A-A6C4-5230416F225F}
 		{9D75028F-B938-4BAA-8461-66B233B3154D} = {44FE8C78-93B6-46DB-B048-18B7119FB97C}
+		{EE5FC122-DCED-43D6-BCB1-5B81D9A3C36C} = {44FE8C78-93B6-46DB-B048-18B7119FB97C}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{5D94C775-57AB-4517-9EA0-C95294E7ED1B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -75,5 +78,9 @@ Global
 		{9D75028F-B938-4BAA-8461-66B233B3154D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9D75028F-B938-4BAA-8461-66B233B3154D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9D75028F-B938-4BAA-8461-66B233B3154D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EE5FC122-DCED-43D6-BCB1-5B81D9A3C36C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EE5FC122-DCED-43D6-BCB1-5B81D9A3C36C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EE5FC122-DCED-43D6-BCB1-5B81D9A3C36C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EE5FC122-DCED-43D6-BCB1-5B81D9A3C36C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

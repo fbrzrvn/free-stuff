@@ -1,3 +1,4 @@
+using FreeStuff.Api;
 using FreeStuff.Api.Extensions.DependencyInjection;
 using FreeStuff.Shared.Infrastructure.EntityFramework;
 using HealthChecks.UI.Client;
@@ -36,15 +37,16 @@ var app = builder.Build();
 
     app.UseSerilogRequestLogging();
 
-    app.UseExceptionHandler("/errors");
+    app.UseExceptionHandler(ApiEndpoints.Errors);
 
     app.UseHttpsRedirection();
 
-    app.MapHealthChecks("/_health", new HealthCheckOptions
-    {
-        ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
-    });
-    
+    app.MapHealthChecks(ApiEndpoints.Health, new HealthCheckOptions
+        {
+            ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+        }
+    );
+
     app.UseAuthentication();
     app.UseAuthorization();
 

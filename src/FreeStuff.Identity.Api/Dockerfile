@@ -8,6 +8,7 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["src/FreeStuff.Identity.Api/FreeStuff.Identity.Api.csproj", "src/FreeStuff.Identity.Api/"]
+COPY ["src/FreeStuff.Contracts/FreeStuff.Contracts.csproj", "src/FreeStuff.Contracts/"]
 RUN dotnet restore "src/FreeStuff.Identity.Api/FreeStuff.Identity.Api.csproj"
 COPY . .
 WORKDIR "/src/src/FreeStuff.Identity.Api"

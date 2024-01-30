@@ -1,7 +1,9 @@
 using System.Text;
+using FreeStuff.Identity.Api.Application;
 using FreeStuff.Identity.Api.Domain;
 using FreeStuff.Identity.Api.Domain.Enum;
 using FreeStuff.Identity.Api.Infrastructure.EntityFramework;
+using FreeStuff.Identity.Api.Infrastructure.Services;
 using FreeStuff.Identity.Api.Infrastructure.Token;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -26,14 +28,13 @@ public static class Infrastructure
         var connectionString = configuration.GetConnectionString("Default");
 
         services.AddDbContext<FreeStuffIdentityDbContext>(
-            options =>
-                options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString))
+            options => options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString))
         );
 
         return services;
     }
 
-       private static IServiceCollection AddIdentity(this IServiceCollection services, IConfiguration configuration)
+    private static IServiceCollection AddIdentity(this IServiceCollection services, IConfiguration configuration)
     {
         var tokenSettings = new TokenConfig();
         configuration.Bind("Jwt", tokenSettings);
@@ -41,8 +42,10 @@ public static class Infrastructure
         services.AddSingleton(Options.Create(tokenSettings));
         services.AddSingleton<ITokenManager, TokenManager>();
 
-        services
-            .AddIdentityCore<User>(
+        services.AddScoped<IAuthenticationService, AuthenticationService>();
+        services.AddScoped<IUserService, UserService>();
+
+        services.AddIdentityCore<User>(
                 options =>
                 {
                     options.Password.RequireDigit           = true;
@@ -64,20 +67,16 @@ public static class Infrastructure
                     // options.SignIn.RequireConfirmedEmail = true;
                 }
             )
-            .AddRoles<IdentityRole>()
-            .AddEntityFrameworkStores<FreeStuffIdentityDbContext>()
-            .AddDefaultTokenProviders();
+           .AddRoles<IdentityRole>()
+           .AddEntityFrameworkStores<FreeStuffIdentityDbContext>()
+           .AddDefaultTokenProviders();
 
-        services
-            .AddHttpContextAccessor()
-            .AddAuthorization(
-                options =>
-                {
-                    options.AddPolicy("Admin", policy => policy.RequireRole(Role.Admin.ToString()));
-                }
+        services.AddHttpContextAccessor()
+           .AddAuthorization(
+                options => { options.AddPolicy("Admin", policy => policy.RequireRole(Role.Admin.ToString())); }
             )
-            .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            .AddJwtBearer(
+           .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+           .AddJwtBearer(
                 options =>
                 {
                     options.SaveToken = true;

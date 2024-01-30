@@ -1,85 +1,44 @@
 using Carter;
 using FreeStuff.Contracts.Identity.Requests;
-using FreeStuff.Identity.Api.Domain;
-using FreeStuff.Identity.Api.Domain.Ports;
-using MapsterMapper;
-using Microsoft.AspNetCore.Identity;
+using FreeStuff.Identity.Api.Application;
 
 namespace FreeStuff.Identity.Api.Features.Identity;
 
 public class IdentityModule : ICarterModule
 {
-    private readonly IJwtTokenGenerator _jwtTokenGenerator;
-
-    public IdentityModule(IJwtTokenGenerator jwtTokenGenerator)
-    {
-        _jwtTokenGenerator = jwtTokenGenerator;
-    }
-
     public void AddRoutes(IEndpointRouteBuilder app)
     {
         app.MapPost(ApiEndpoints.Register, RegisterUser);
-        app.MapPost(ApiEndpoints.Token, GetToken);
-
-        app.MapGet(ApiEndpoints.Me, GetMe)
-           .RequireAuthorization();
+        app.MapPost(ApiEndpoints.Login, LoginUser);
+        app.MapPost(ApiEndpoints.RefreshToken, ProcessRefreshTokenRequestAsync).RequireAuthorization();
+        app.MapPost(ApiEndpoints.AdminOnly, AdminOnly).RequireAuthorization();
     }
 
-    private static async Task<IResult> RegisterUser(
-        RegisterUserRequest request, UserManager<User> userManager, IMapper mapper
+    private static async Task<IResult> RegisterUser(RegisterUserRequest request, IUserService userService)
+    {
+        return await userService.RegisterUser(request);
+    }
+
+    private static async Task<IResult> LoginUser(LoginUserRequest request, IAuthenticationService authenticationService)
+    {
+        return await authenticationService.LoginUser(request);
+    }
+
+    private static async Task<IResult> ProcessRefreshTokenRequestAsync(
+        RefreshTokenRequest    request,
+        IHttpContextAccessor   contextAccessor,
+        IAuthenticationService authenticationService
     )
     {
-        var user   = mapper.Map<User>(request);
-        var result = await userManager.CreateAsync(user, request.Password);
+        var claims = contextAccessor.HttpContext!.User;
 
-        if (!result.Succeeded)
-        {
-            return Results.BadRequest(result.Errors);
-        }
-
-        var roles = await userManager.GetRolesAsync(user);
-        await userManager.AddToRolesAsync(user, roles);
-
-        return Results.Created();
+        return await authenticationService.ProcessRefreshTokenRequestAsync(request, claims);
     }
 
-    private async Task<IResult> GetToken(AuthenticateUserRequest request, UserManager<User> userManager)
+    private static async Task<IResult> AdminOnly(IHttpContextAccessor contextAccessor, IUserService userService)
     {
-        var user = await userManager.FindByEmailAsync(request.Email);
+        var claims = contextAccessor.HttpContext!.User;
 
-        if (user is null || !await userManager.CheckPasswordAsync(user, request.Password))
-        {
-            return Results.Forbid();
-        }
-
-        var roles = await userManager.GetRolesAsync(user);
-        var jwt   = _jwtTokenGenerator.GenerateJwt(user, roles);
-
-        return Results.Ok(new
-            {
-                AccessToken = jwt
-            }
-        );
-    }
-
-    private static async Task<IResult> GetMe(IHttpContextAccessor contextAccessor)
-    {
-        var user = contextAccessor.HttpContext!.User;
-
-        await Task.CompletedTask;
-
-        return Results.Ok(new
-            {
-                Claims = user.Claims.Select(s => new
-                    {
-                        s.Type,
-                        s.Value
-                    }
-                ).ToList(),
-                user.Identity!.Name,
-                user.Identity.IsAuthenticated,
-                user.Identity.AuthenticationType
-            }
-        );
+        return await userService.AdminOnly(claims);
     }
 }

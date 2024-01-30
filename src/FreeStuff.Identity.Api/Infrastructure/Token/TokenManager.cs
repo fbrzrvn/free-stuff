@@ -17,7 +17,7 @@ public class TokenManager : ITokenManager
         _tokenConfig = tokenConfig.Value;
     }
 
-    public TokenResponse GenerateTokens(User user, IEnumerable<string> roles)
+    public AuthenticationResponse GenerateTokens(User user, IEnumerable<string> roles)
     {
         var claims = new List<Claim>
         {
@@ -58,6 +58,6 @@ public class TokenManager : ITokenManager
         var token        = tokenHandler.CreateToken(refreshTokenDescriptor);
         var refreshToken = tokenHandler.WriteToken(token);
 
-        return new TokenResponse(accessToken, refreshToken);
+        return new AuthenticationResponse(accessToken, refreshToken);
     }
 }

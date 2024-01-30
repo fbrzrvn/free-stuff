@@ -5,7 +5,7 @@ namespace FreeStuff.Identity.Api.Application;
 
 public interface IUserService
 {
-    Task<IResult> RegisterUser(RegisterUserRequest request);
+    Task<IResult> RegisterUserAsync(RegisterUserRequest request);
 
     Task<IResult> AdminOnly(ClaimsPrincipal claims);
 }

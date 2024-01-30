@@ -8,23 +8,26 @@ public class IdentityModule : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapPost(ApiEndpoints.Register, RegisterUser);
-        app.MapPost(ApiEndpoints.Login, LoginUser);
-        app.MapPost(ApiEndpoints.RefreshToken, ProcessRefreshTokenRequestAsync).RequireAuthorization();
+        app.MapPost(ApiEndpoints.Register, RegisterUserAsync);
+        app.MapPost(ApiEndpoints.Login, AuthenticateAsync);
+        app.MapPost(ApiEndpoints.RefreshToken, RefreshTokenAsync).RequireAuthorization();
         app.MapPost(ApiEndpoints.AdminOnly, AdminOnly).RequireAuthorization();
     }
 
-    private static async Task<IResult> RegisterUser(RegisterUserRequest request, IUserService userService)
+    private static async Task<IResult> RegisterUserAsync(RegisterUserRequest request, IUserService userService)
     {
-        return await userService.RegisterUser(request);
+        return await userService.RegisterUserAsync(request);
     }
 
-    private static async Task<IResult> LoginUser(LoginUserRequest request, IAuthenticationService authenticationService)
+    private static async Task<IResult> AuthenticateAsync(
+        AuthenticationRequest       request,
+        IAuthenticationService authenticationService
+    )
     {
-        return await authenticationService.LoginUser(request);
+        return await authenticationService.AuthenticateAsync(request);
     }
 
-    private static async Task<IResult> ProcessRefreshTokenRequestAsync(
+    private static async Task<IResult> RefreshTokenAsync(
         RefreshTokenRequest    request,
         IHttpContextAccessor   contextAccessor,
         IAuthenticationService authenticationService
@@ -32,7 +35,7 @@ public class IdentityModule : ICarterModule
     {
         var claims = contextAccessor.HttpContext!.User;
 
-        return await authenticationService.ProcessRefreshTokenRequestAsync(request, claims);
+        return await authenticationService.RefreshTokenAsync(request, claims);
     }
 
     private static async Task<IResult> AdminOnly(IHttpContextAccessor contextAccessor, IUserService userService)

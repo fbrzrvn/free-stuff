@@ -5,5 +5,5 @@ namespace FreeStuff.Identity.Api.Infrastructure.Token;
 
 public interface ITokenManager
 {
-    TokenResponse GenerateTokens(User user, IEnumerable<string> roles);
+    AuthenticationResponse GenerateTokens(User user, IEnumerable<string> roles);
 }

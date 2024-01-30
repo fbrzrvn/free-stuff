@@ -5,7 +5,7 @@ namespace FreeStuff.Identity.Api.Application;
 
 public interface IAuthenticationService
 {
-    Task<IResult> LoginUser(LoginUserRequest request);
+    Task<IResult> AuthenticateAsync(AuthenticationRequest request);
 
-    Task<IResult> ProcessRefreshTokenRequestAsync(RefreshTokenRequest refreshTokenRequest, ClaimsPrincipal claims);
+    Task<IResult> RefreshTokenAsync(RefreshTokenRequest refreshTokenRequest, ClaimsPrincipal claims);
 }

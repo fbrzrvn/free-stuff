@@ -21,7 +21,7 @@ public class UserService : IUserService
         _mapper      = mapper;
     }
 
-    public async Task<IResult> RegisterUser(RegisterUserRequest request)
+    public async Task<IResult> RegisterUserAsync(RegisterUserRequest request)
     {
         request = request with { Role = request.Role ?? Role.RegularUser.Name };
 

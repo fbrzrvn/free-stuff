@@ -21,7 +21,7 @@ public class AuthenticationService : IAuthenticationService
         _userManager  = userManager;
     }
 
-    public async Task<IResult> LoginUser(LoginUserRequest request)
+    public async Task<IResult> AuthenticateAsync(AuthenticationRequest request)
     {
         var user = await _userManager.FindByEmailAsync(request.Email);
 
@@ -43,10 +43,7 @@ public class AuthenticationService : IAuthenticationService
         return Results.Ok(tokens);
     }
 
-    public async Task<IResult> ProcessRefreshTokenRequestAsync(
-        RefreshTokenRequest refreshTokenRequest,
-        ClaimsPrincipal     claims
-    )
+    public async Task<IResult> RefreshTokenAsync(RefreshTokenRequest refreshTokenRequest, ClaimsPrincipal claims)
     {
         var user = await _userManager.GetUserAsync(claims);
 

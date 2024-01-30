@@ -1,4 +1,5 @@
 using FreeStuff.Identity.Api.Domain;
+using FreeStuff.Identity.Api.Infrastructure.EntityFramework.Configurations;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 

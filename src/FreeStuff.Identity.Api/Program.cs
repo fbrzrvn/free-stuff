@@ -3,9 +3,8 @@ using FreeStuff.Identity.Api.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 {
-    builder.Services.AddDb(builder.Configuration);
-    builder.Services.AddIdentity(builder.Configuration);
-    builder.Services.AddMapper();
+    builder.Services.AddInfrastructure(builder.Configuration);
+    builder.Services.AddApplication();
 
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();

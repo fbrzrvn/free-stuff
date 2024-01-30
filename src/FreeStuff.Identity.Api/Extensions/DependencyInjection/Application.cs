@@ -3,9 +3,16 @@ using MapsterMapper;
 
 namespace FreeStuff.Identity.Api.Extensions.DependencyInjection;
 
-public static class Mapper
+public static class Application
 {
-    public static IServiceCollection AddMapper(this IServiceCollection services)
+    public static IServiceCollection AddApplication(this IServiceCollection services)
+    {
+        AddMapper(services);
+
+        return services;
+    }
+
+    private static IServiceCollection AddMapper(this IServiceCollection services)
     {
         var config = TypeAdapterConfig.GlobalSettings;
         config.Scan(typeof(Program).Assembly);

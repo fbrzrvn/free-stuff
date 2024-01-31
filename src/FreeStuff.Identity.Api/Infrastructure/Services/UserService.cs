@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using FreeStuff.Contracts.Identity.Requests;
-using FreeStuff.Identity.Api.Application;
+using FreeStuff.Identity.Api.Application.Services;
+using FreeStuff.Identity.Api.Application.Token;
 using FreeStuff.Identity.Api.Domain;
 using FreeStuff.Identity.Api.Domain.Enum;
 using MapsterMapper;
@@ -11,14 +12,21 @@ namespace FreeStuff.Identity.Api.Infrastructure.Services;
 public class UserService : IUserService
 {
     private readonly IMapper                   _mapper;
+    private readonly ITokenManager             _tokenManager;
     private readonly RoleManager<IdentityRole> _roleManager;
     private readonly UserManager<User>         _userManager;
 
-    public UserService(RoleManager<IdentityRole> roleManager, UserManager<User> userManager, IMapper mapper)
+    public UserService(
+        ITokenManager             tokenManager,
+        RoleManager<IdentityRole> roleManager,
+        UserManager<User>         userManager,
+        IMapper                   mapper
+    )
     {
-        _roleManager = roleManager;
-        _userManager = userManager;
-        _mapper      = mapper;
+        _tokenManager = tokenManager;
+        _roleManager  = roleManager;
+        _userManager  = userManager;
+        _mapper       = mapper;
     }
 
     public async Task<IResult> RegisterUserAsync(RegisterUserRequest request)
@@ -60,5 +68,21 @@ public class UserService : IUserService
         }
 
         return Results.Ok("You are an admin");
+    }
+
+    public async Task<IResult> ForgotPasswordAsync(ForgotPasswordRequest request, CancellationToken cancellationToken)
+    {
+        var user = await _userManager.FindByEmailAsync(request.Email);
+
+        if (user == null)
+        {
+            return Results.NotFound();
+        }
+
+        var token = await _tokenManager.GenerateTokenAsync(user, cancellationToken);
+
+        return Results.Ok(
+            $"A token to reset the password was successfully generated. --> TokenType: {token.TokenType}, Id: {token.Id}, Value: {token.Value}, IssuedDateTime: {token.IssuedDateTime}, ExpirationDateTime: {token.ExpirationDateTime}, UserId: {token.UserId}"
+        );
     }
 }

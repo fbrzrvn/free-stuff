@@ -1,8 +1,8 @@
 using System.Security.Claims;
 using FreeStuff.Contracts.Identity.Requests;
-using FreeStuff.Identity.Api.Application;
+using FreeStuff.Identity.Api.Application.Services;
+using FreeStuff.Identity.Api.Application.Token;
 using FreeStuff.Identity.Api.Domain;
-using FreeStuff.Identity.Api.Infrastructure.Token;
 using Microsoft.AspNetCore.Identity;
 
 namespace FreeStuff.Identity.Api.Infrastructure.Services;

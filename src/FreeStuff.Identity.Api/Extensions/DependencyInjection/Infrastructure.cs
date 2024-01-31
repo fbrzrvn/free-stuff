@@ -1,7 +1,9 @@
 using System.Text;
-using FreeStuff.Identity.Api.Application;
+using FreeStuff.Identity.Api.Application.Services;
+using FreeStuff.Identity.Api.Application.Token;
 using FreeStuff.Identity.Api.Domain;
 using FreeStuff.Identity.Api.Domain.Enum;
+using FreeStuff.Identity.Api.Domain.Ports;
 using FreeStuff.Identity.Api.Infrastructure.EntityFramework;
 using FreeStuff.Identity.Api.Infrastructure.Services;
 using FreeStuff.Identity.Api.Infrastructure.Token;
@@ -36,13 +38,13 @@ public static class Infrastructure
 
     private static IServiceCollection AddIdentity(this IServiceCollection services, IConfiguration configuration)
     {
-        var tokenSettings = new TokenConfig();
-        configuration.Bind("Jwt", tokenSettings);
-
-        services.AddSingleton(Options.Create(tokenSettings));
-        services.AddSingleton<ITokenManager, TokenManager>();
+        var tokenConfig = new TokenConfig();
+        configuration.Bind("Token", tokenConfig);
+        services.AddSingleton(Options.Create(tokenConfig));
 
         services.AddScoped<IAuthenticationService, AuthenticationService>();
+        services.AddScoped<ITokenManager, TokenManager>();
+        services.AddScoped<ITokenRepository, EfTokenRepository>();
         services.AddScoped<IUserService, UserService>();
 
         services.AddIdentityCore<User>(
@@ -55,11 +57,6 @@ public static class Infrastructure
                     options.Password.RequiredLength         = 10;
 
                     options.User.RequireUniqueEmail = true;
-
-                    // options.Tokens.AuthenticatorIssuer            = "FreeStuff.Identity.API";
-                    // options.Tokens.EmailConfirmationTokenProvider = TokenOptions.DefaultEmailProvider;
-                    // options.Tokens.PasswordResetTokenProvider     = TokenOptions.DefaultEmailProvider;
-                    // options.Tokens.ChangeEmailTokenProvider       = TokenOptions.DefaultEmailProvider;
 
                     options.Lockout.DefaultLockoutTimeSpan  = TimeSpan.FromMinutes(30);
                     options.Lockout.MaxFailedAccessAttempts = 5;
@@ -82,13 +79,13 @@ public static class Infrastructure
                     options.SaveToken = true;
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
-                        ValidateIssuer = true,
-                        ValidateAudience = true,
-                        ValidateLifetime = true,
+                        ValidateIssuer           = true,
+                        ValidateAudience         = true,
+                        ValidateLifetime         = true,
                         ValidateIssuerSigningKey = true,
-                        ValidIssuer = tokenSettings.Issuer,
-                        ValidAudience = tokenSettings.Audience,
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenSettings.Secret))
+                        ValidIssuer              = tokenConfig.Issuer,
+                        ValidAudience            = tokenConfig.Audience,
+                        IssuerSigningKey         = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenConfig.Secret))
                     };
                 }
             );

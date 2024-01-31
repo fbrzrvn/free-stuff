@@ -2,7 +2,10 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using FreeStuff.Contracts.Identity.Responses;
+using FreeStuff.Identity.Api.Application.Token;
 using FreeStuff.Identity.Api.Domain;
+using FreeStuff.Identity.Api.Domain.Enum;
+using FreeStuff.Identity.Api.Domain.Ports;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
@@ -10,11 +13,13 @@ namespace FreeStuff.Identity.Api.Infrastructure.Token;
 
 public class TokenManager : ITokenManager
 {
-    private readonly TokenConfig _tokenConfig;
+    private readonly TokenConfig      _tokenConfig;
+    private readonly ITokenRepository _tokenRepository;
 
-    public TokenManager(IOptions<TokenConfig> tokenConfig)
+    public TokenManager(IOptions<TokenConfig> tokenConfig, ITokenRepository tokenRepository)
     {
-        _tokenConfig = tokenConfig.Value;
+        _tokenConfig     = tokenConfig.Value;
+        _tokenRepository = tokenRepository;
     }
 
     public AuthenticationResponse GenerateTokens(User user, IEnumerable<string> roles)
@@ -59,5 +64,15 @@ public class TokenManager : ITokenManager
         var refreshToken = tokenHandler.WriteToken(token);
 
         return new AuthenticationResponse(accessToken, refreshToken);
+    }
+
+    public async Task<Domain.Token> GenerateTokenAsync(User user, CancellationToken cancellationToken)
+    {
+        var token = Domain.Token.Create(user.Id, TokenType.RefreshToken);
+
+        await _tokenRepository.CreateAsync(token, cancellationToken);
+        await _tokenRepository.SaveChangesAsync(cancellationToken);
+
+        return token;
     }
 }
